@@ -1,0 +1,5 @@
+.build/
+*.swp
+/local/
+/Bot-ChatBots-Telegram-*.tar.gz
+/Bot-ChatBots-Telegram-*/
