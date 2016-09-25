@@ -1,10 +1,12 @@
 requires 'perl',                       '5.010';
-requires 'Mojolicious',                '7.08';
+requires 'Bot::ChatBots',              '0.001';
+requires 'IO::Socket::SSL',            '2.038';
 requires 'Log::Any',                   '1.042';
 requires 'Log::Any::Adapter::MojoLog', '0.02';
-requires 'IO::Socket::SSL',            '2.038';
+requires 'Mojolicious',                '7.08';
+requires 'Ouch',                       '0.0409';
+requires 'Try::Tiny',                  '0.27';
 requires 'WWW::Telegram::BotAPI',      '0.07';
-requires 'Module::Runtime',            '0.014';
 
 on test => sub {
    requires 'Test::More', '0.88';
