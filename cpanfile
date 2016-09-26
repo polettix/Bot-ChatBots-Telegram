@@ -11,6 +11,7 @@ requires 'WWW::Telegram::BotAPI',      '0.07';
 on test => sub {
    requires 'Test::More', '0.88';
    requires 'Path::Tiny', '0.096';
+   requires 'Test::Trap'; # for Ouch, apparently
 };
 
 on develop => sub {
