@@ -58,14 +58,15 @@ sub handler {
 
       # whatever happens, the bot "cannot" fail or Telegram will hammer
       # us with the same update over and over
-      my $outcome;
+      my ($outcome, $update);
       try {
          local $source->{controller} = $c;
+         $update = $c->req->json;
          $outcome = $self->process(
             {
                source => $source,
                stash  => $c->stash,
-               update => $c->req->json,
+               update => $update,
             }
          );
          1;
@@ -81,8 +82,11 @@ sub handler {
 
          # this is more generic, interpret as sendMessage by default
          if (my $response = $outcome->{response}) {
+            $response = {text => $response} unless ref $response;
             local $response->{method} = $response->{method}
               // 'sendMessage';
+            local $response->{chat_id} = $response->{chat_id}
+              // $update->{message}{chat}{id};
             return $c->render(json => $response);
          }
 
