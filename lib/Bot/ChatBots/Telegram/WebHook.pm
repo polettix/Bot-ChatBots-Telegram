@@ -10,7 +10,7 @@ use Mojo::Path;
 use Log::Any qw< $log >;
 use Try::Tiny;
 
-use Bot::ChatBots::Utils qw< guard >;
+use Bot::ChatBots::Utils ();
 
 has [qw< app guard path url >];
 
@@ -35,7 +35,7 @@ sub new {
 
    if ($args->{unregister}) {
       my $token = $self->token;
-      $self->guard(guard(sub { _register($token) }));
+      $self->guard(Bot::ChatBots::Utils::guard(sub { _register($token) }));
    }
 
    return $self;
