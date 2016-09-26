@@ -69,7 +69,7 @@ sub handler {
             }
          );
          1;
-      }
+      } ## end try
       catch {
          $log->error("caught bot exception: $_");
       };
@@ -79,9 +79,13 @@ sub handler {
          # this is WebHook and Mojolicious specific, somehow
          return if $outcome->{rendered};
 
-         # this is more generic
-         return $c->render(json => $outcome->{response})
-           if $outcome->{response};
+         # this is more generic, interpret as sendMessage by default
+         if (my $response = $outcome->{response}) {
+            local $response->{method} = $response->{method}
+              // 'sendMessage';
+            return $c->render(json => $response);
+         }
+
       } ## end if ($outcome)
 
       # this is the safe approach - everything went fine, nothing to say
@@ -94,16 +98,16 @@ sub register {
    my $args = (@_ && ref($_[0])) ? $_[0] : {@_};
    my $app  = $self->app;
 
-   my $token = $args->{token} // $self->token
-     // ouch 500, 'Cannot register WebHook without a token';
+   my $token = $args->{token} // $self->token // ouch 500,
+     'Cannot register WebHook without a token';
 
    my $wh_url;
    if (my $url = $args->{url} // $self->url) {
       $wh_url = Mojo::URL->new($url);
    }
    else {
-      my $path = $args->{path} // $self->path
-        // ouch 500, 'Cannot register WebHook without a url or a path';
+      my $path = $args->{path} // $self->path // ouch 500,
+        'Cannot register WebHook without a url or a path';
       $path = Mojo::Path->new($path);
 
       my $c = $args->{controller} // $app->build_controller;
