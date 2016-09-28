@@ -6,10 +6,15 @@ use Ouch;
 use Mojo::Base 'Bot::ChatBots::Telegram::Base';
 use WWW::Telegram::BotAPI ();
 
+has async => 1;
 has 'callback';
 has telegram => sub {
-   my $tg = WWW::Telegram::BotAPI->new(token => shift->token, async => 1);
-   Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
+   my $self = shift;
+   my $tg   = WWW::Telegram::BotAPI->new(
+      token => $self->token,
+      async => $self->async
+   );
+   Mojo::IOLoop->start unless Mojo::IOLoop->is_running;    # safe side!
    return $tg;
 };
 
@@ -30,6 +35,8 @@ sub send {
         or ouch 500, $self->name . ": unsupported method $name";
    };
 
+   $callback //= $self->callback;
+   $callback = undef unless $self->async;
    return $self->telegram->api_request(
       $method => $message,
       ($callback ? $callback : ())
