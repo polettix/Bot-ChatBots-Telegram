@@ -8,7 +8,7 @@ use WWW::Telegram::BotAPI ();
 
 has 'callback';
 has telegram => sub {
-   my $tg WWW::Telegram::BotAPI->new(token => shift->token, async => 1);
+   my $tg = WWW::Telegram::BotAPI->new(token => shift->token, async => 1);
    Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
    return $tg;
 };
