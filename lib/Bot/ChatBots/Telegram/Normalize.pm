@@ -10,7 +10,8 @@ sub process {
    my ($self, $record) = @_;
 
    my $update = $record->{update} or ouch 500, 'no update found!';
-   $record->{technology} = 'telegram';
+   $record->{source}{technology} = 'telegram';
+   $record->{source}{token} //= $record->{source}{object_token};
 
    my ($type) = grep { $_ ne 'update_id' } keys %$update;
    $record->{type} = $type;
