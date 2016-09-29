@@ -36,6 +36,9 @@ sub send {
    defined($message)
      or ouch 500, $self->name . ': no output to send';
 
+   $message = {text => $message, telegram_method => 'sendMessage'}
+     unless ref $message;
+
    my $method = delete(local $message->{telegram_method}) // do {
       state $method_for = {
          send        => 'sendMessage',
