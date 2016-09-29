@@ -1,0 +1,122 @@
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+Bot::ChatBots::Telegram::Base - Base class for main handlers
+
+=head1 DESCRIPTION
+
+This is a base class for L<Bot::ChatBots::Telegram::LongPoll> and
+L<Bot::ChatBots::Telegram::WebHooks>.
+
+=head1 METHODS
+
+=head2 B<< logger >>
+
+   $obj->logger->info('whatever');
+   $obj->logger($new_logger);
+
+Accessor for the logger, defaults to whatever L<Log::Any/get_logger> thinks
+is correct.
+
+=head2 B<< name >>
+
+   say $obj->name;
+   $obj->name('Foo the Bar');
+
+Accessor for a name, that comes handy in logs. It defaults to what L</typename>
+is.
+
+=head2 B<< new >>
+
+   my $object = $class->new(@args);
+
+Constructor for the object, you most probably will call it from a derived class.
+
+The class inherits from L<Mojo::Base>, see there for the calling convention.
+
+The following keys are supported in the base class (more might be present in
+derived classes of course):
+
+=over
+
+=item C<logger>
+
+=item C<name>
+
+=item C<normalizer>
+
+=item C<processor>
+
+=item C<token>
+
+=item C<typename>
+
+=back
+
+See the respective accessors.
+
+=head2 B<< normalizer >>
+
+   my $normalized_record = $obj->normalizer->($received_record);
+   $obj->normalizer(sub { ... });
+
+Accessor for the normalizer, defaults to a
+L<Bot::ChatBots::Telegram::Normalize/processor> sub reference.
+
+=head2 B<< process >>
+
+   my $outcome = $obj->process($input_record);
+
+Process an input record, passing it first through the L</normalizer> (which might
+be missing, and it's fine), then through the L</processor>.
+
+=head2 B<< processor >>
+
+   my $tube = $obj->processor;
+   $obj->processor(sub { ... });
+
+Accessor for the following processor. It is mandatory to set this parameter
+because in general classed derived from this base class will receive records
+from a specific channel and will need to push them into a tube for their
+processing.
+
+=head2 B<< token >>
+
+   my $token = $obj->token;
+   $obj->token($new_token);
+
+Accessor for the Telegram token.
+
+=head2 B<< typename >>
+
+   my $tn = $obj->typename;
+   $obj->typename('Friendly Bastard');
+
+Accessor for a typename, which can come handy in logging/debugging. It defaults to
+the class name.
+
+
+=head1 SEE ALSO
+
+L<Bot::ChatBots>, L<Bot::ChatBots::Telegram::LongPoll>.
+L<Bot::ChatBots::Telegram::WebHooks>.
+
+=head1 AUTHOR
+
+Flavio Poletti <polettix@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2016 by Flavio Poletti <polettix@cpan.org>
+
+This module is free software. You can redistribute it and/or modify it
+under the terms of the Artistic License 2.0.
+
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
+
+=cut
