@@ -23,7 +23,7 @@ sub handler {
       object_token => $self->token,
       processor    => $self->processor,
       ref          => $self,
-      type         => ref($self),
+      type         => $self->typename,
    };
 
    return sub {
