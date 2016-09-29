@@ -102,7 +102,7 @@ sub start {
       );
 
    };
-   Mojo::IOLoop->recurring(0.1, $callback);
+   Mojo::IOLoop->recurring($self->interval, $callback);
 
    Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
 
