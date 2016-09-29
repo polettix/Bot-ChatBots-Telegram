@@ -1,6 +1,6 @@
 package Bot::ChatBots::Telegram;
 use strict;
-{ our $VERSION = '0.001'; }
+{ our $VERSION = '0.001001'; }
 
 use Bot::ChatBots::Utils qw< load_module >;
 

@@ -1,7 +1,7 @@
 package Bot::ChatBots::Telegram::Normalize;
 use strict;
 use Ouch;
-{ our $VERSION = '0.001'; }
+{ our $VERSION = '0.001001'; }
 
 use Mo;
 extends 'Bot::ChatBots::Base';    # use a different technology here!

@@ -2,7 +2,7 @@ package Bot::ChatBots::Telegram::WebHook;
 use strict;
 use warnings;
 use Ouch;
-{ our $VERSION = '0.001'; }
+{ our $VERSION = '0.001001'; }
 
 use Mojo::Base 'Bot::ChatBots::Telegram::Base';
 use Mojo::URL;

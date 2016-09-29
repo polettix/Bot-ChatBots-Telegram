@@ -1,7 +1,7 @@
 package Bot::ChatBots::Telegram::Base;
 use strict;
 use Ouch;
-{ our $VERSION = '0.001'; }
+{ our $VERSION = '0.001001'; }
 
 use Mojo::Base '-base';
 use Log::Any ();

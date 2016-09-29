@@ -1,7 +1,7 @@
 package Bot::ChatBots::Telegram::LongPoll;
 use strict;
 use Ouch;
-{ our $VERSION = '0.001'; }
+{ our $VERSION = '0.001001'; }
 
 use Mojo::Base 'Bot::ChatBots::Telegram::Base';
 use Mojo::UserAgent ();
