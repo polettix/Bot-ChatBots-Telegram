@@ -17,13 +17,11 @@ has callback => sub {    # default callback allows for unblocking operation
    };
 };
 has connect_timeout => 20;
-has interval        => 1;
-has name            => sub { return shift->typename };
+has interval        => 0.1;
 has sender => sub {                         # prefer has-a in this case
    require Bot::ChatBots::Telegram::Sender;
    return Bot::ChatBots::Telegram::Sender->new(token => shift->token);
 };
-has typename => sub { return ref($_[0]) || $_[0] };
 has update_timeout => 300;
 
 sub new {
