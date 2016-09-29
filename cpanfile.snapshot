@@ -1,5 +1,19 @@
 # carton snapshot format: version 1.0
 DISTRIBUTIONS
+  Bot-ChatBots-0.001
+    pathname: P/PO/POLETTIX/Bot-ChatBots-0.001.tar.gz
+    provides:
+      Bot::ChatBots 0.001
+      Bot::ChatBots::Auth 0.001
+      Bot::ChatBots::Base 0.001
+      Bot::ChatBots::Guard 0.001
+      Bot::ChatBots::Utils 0.001
+    requirements:
+      Log::Any 1.042
+      Mo 0.040
+      Module::Build::Tiny 0.034
+      Module::Runtime 0.014
+      perl 5.010
   Cpanel-JSON-XS-3.0217
     pathname: R/RU/RURBAN/Cpanel-JSON-XS-3.0217.tar.gz
     provides:
@@ -293,6 +307,31 @@ DISTRIBUTIONS
       Log::Any::Adapter 0.07
       Module::Build::Tiny 0.007
       Mojolicious 2.15
+  Mo-0.40
+    pathname: T/TI/TINITA/Mo-0.40.tar.gz
+    provides:
+      Attr::Trait 0.40
+      Mo 0.40
+      Mo::Golf 0.40
+      Mo::Inline 0.40
+      Mo::Moose 0.40
+      Mo::Mouse 0.40
+      Mo::build 0.40
+      Mo::builder 0.40
+      Mo::chain 0.40
+      Mo::coerce 0.40
+      Mo::default 0.40
+      Mo::exporter 0.40
+      Mo::import 0.40
+      Mo::importer 0.40
+      Mo::is 0.40
+      Mo::nonlazy 0.40
+      Mo::option 0.40
+      Mo::required 0.40
+      Mo::xs 0.40
+    requirements:
+      ExtUtils::MakeMaker 0
+      perl 5.006000
   Module-Build-Tiny-0.039
     pathname: L/LE/LEONT/Module-Build-Tiny-0.039.tar.gz
     provides:
