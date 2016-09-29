@@ -1,0 +1,180 @@
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+Bot::ChatBots::Telegram::LongPoll - Telegram updates receiver, long-poll
+
+=head1 SYNOPSIS
+
+   use Log::Any qw< $log >;
+   use Log::Any::Adapter;
+   use Mojolicious::Lite;
+   Log::Any::Adapter->set('Stderr');
+   plugin 'Bot::ChatBots::Telegram' => sources => [
+      [
+         'WebHook',
+         processor  => \&processor,
+         register   => 1,
+         token      => $ENV{TOKEN},
+         unregister => 1,
+         url        => 'https://example.com:8443/mybot',
+      ],
+      # more can follow here...
+   ];
+   app->start;
+   sub processor {
+      my $record = shift;
+      # do whatever you want with $record, e.g. set a quick response
+      $record->{response} = 'your thoughs are important for us!';
+      return $record;
+   }
+
+=head1 DESCRIPTION
+
+This is an updates receiver and dispatcher for the Telegram
+infrastructure. It connects to Telegram's API for I<webhooks> style (i.e.
+waiting for push messages to arrive), so you need a routable address/port
+to get the ball rolling.
+
+Strictly speaking, you MUST only provide a L</processor> and either
+L</url> or L</path>. The latter is used to set a POST route, while the
+former is what is called whenever a new message arrives through that
+route.
+
+Most probably you will also want to automatically register your webhook at
+Telegram. In this case, you MUST also provide a L</token>. You can also
+set automatic registration (and unregistration) when creating the object.
+
+When invoked, the L</processor> tube can return a record with the
+C<response> field set. In this case, this response is passed back as the
+answer to the call from the Telegram server (although Telegram documents
+correctly point out that you don't get any feedback about how successful
+this can be).
+
+=head1 METHODS
+
+This class derives from L<Bot::ChatBots::Telegram::Base> and inherits all
+of its methods.
+
+=head2 B<< app >>
+
+   my $app = $obj->app;
+   $obj->app($ref_to_app_object);
+
+Accessor for the app object.
+
+=head2 B<< handler >>
+
+   my $subref = $obj->handler(%args);
+      $subref = $obj->handler(\%args);
+
+Return a subroutine reference suitable for being installed as a route in
+L<Mojolicious>; it is used by the constructor L</new> behind the scenes.
+
+When this handler is invoked because a new update is pushed by Telegram, it
+invokes the L<Bot::ChatBots::Telegram::Base/processor> with the following
+record:
+
+   {
+      source => {
+         app  => $app,       # Mojolicious object
+         args => \%args,     # whatever you passed in
+         object_token => $token,  # copy of token
+         processor => $sub_ref,   # ref to the very handler
+         ref  => $obj,       # this Bot::ChatBots::Telegram::LongPoll obj
+         type => $typename,  # defaults to Bot::ChatBots::Telegram::WebHook
+      },
+      stash  => $hashref,
+      update => $update_object_received_from_telegram,
+   }
+
+If the invoked L</process> returns a record containing the C<response> field,
+it is used for ansering the POST request by Telegram, that will be sent to the
+same chat the message came from.
+
+=head2 B<< new >>
+
+   my $obj = Bot::ChatBots::Telegram::WebHook>new(%args);
+
+Constructor, delegates real object constructor to parent class' C<new>
+method, and does a few operations itself like registering the POST route.
+
+Arguments C<%args> can contain the following keys (in addition to the
+fields tied to accessors):
+
+=over
+
+=item C<register>
+
+boolean flag to trigger automatic registration via L</register>
+
+=item C<routes>
+
+an object for setting routes, defaults to C<< $obj->app->routes >>;
+
+=item C<unregister>
+
+boolean flag to trigger automatic de-registration from Telegram upon exit.
+This does not (yet) work well in all cases.
+
+=back
+
+=head2 B<< path >>
+
+   my $path = $obj->path;
+   $obj->path($string);
+
+Accessor for the path that is used for setting the route in the
+L<Mojolicious> app during construction. If not present, it is derived from
+L</url>.
+
+=head2 B<< processor >>
+
+See L<Bot::ChatBots::Telegram::Base/processor>.
+
+=head2 B<< register >>
+
+   $obj->register(%args);
+   $obj->register(\%args);
+
+Register the L</url> (possibly derived from L</path> if needed) as the
+webhook in Telegram.
+
+This operation requires a valid token, which can be either passed as one
+of the C<%args> or taken from the object (L</token> in particular).
+
+=head2 B<< token >>
+
+See L<Bot::ChatBots::Telegram::Base/token>.
+
+
+=head2 B<< unregister >>
+
+   $obj->unregister;
+
+De-register webhook from Telegram (after which you can restart using
+long-polling, for example).
+
+=head1 SEE ALSO
+
+L<Bot::ChatBots>, L<Bot::ChatBots::Telegram::Base>.
+L<Bot::ChatBots::Telegram::WebHooks>.
+
+=head1 AUTHOR
+
+Flavio Poletti <polettix@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2016 by Flavio Poletti <polettix@cpan.org>
+
+This module is free software. You can redistribute it and/or modify it
+under the terms of the Artistic License 2.0.
+
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
+
+=cut
