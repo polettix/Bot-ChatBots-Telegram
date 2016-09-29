@@ -8,6 +8,15 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 has [qw< app sources >];
 
+sub add_source {
+   my $self   = shift;
+   my $module = load_module(shift, 'Bot::ChatBots::Telegram');
+   my @args   = (@_ && ref($_[0])) ? %{$_[0]} : @_;
+   my $source = $module->new(@args, app => $self->app);
+   push @{$self->sources}, $source;
+   return $source;
+} ## end sub add_source
+
 sub register {
    my ($self, $app, $conf) = @_;
    $conf //= {};
@@ -35,14 +44,5 @@ sub register {
 
    return $self;
 } ## end sub register
-
-sub add_source {
-   my $self   = shift;
-   my $module = load_module(shift, 'Bot::ChatBots::Telegram');
-   my @args   = (@_ && ref($_[0])) ? %{$_[0]} : @_;
-   my $source = $module->new(@args, app => $self->app);
-   push @{$self->sources}, $source;
-   return $source;
-} ## end sub add_source
 
 42;
