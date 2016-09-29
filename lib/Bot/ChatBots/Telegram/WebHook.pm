@@ -12,34 +12,7 @@ use Try::Tiny;
 
 use Bot::ChatBots::Utils ();
 
-has [qw< app guard path url >];
-
-sub new {
-   my $package = shift;
-   my $self    = $package->SUPER::new(@_);
-
-   my $args = (@_ && ref($_[0])) ? $_[0] : {@_};
-
-   my $path = $self->path;
-   if (!defined($path)) {
-      my $url = $self->url
-        or ouch 500, 'undefined path and url for WebHook';
-      $path = Mojo::URL->new($url)->path->to_string;
-      $self->path($path);
-   } ## end if (!defined($path))
-
-   my $r = $args->{routes} // $self->app->routes;
-   my $route = $r->post($path => $self->handler);
-
-   $self->register() if $args->{register};
-
-   if ($args->{unregister}) {
-      my $token = $self->token;
-      $self->guard(Bot::ChatBots::Utils::guard(sub { _register($token) }));
-   }
-
-   return $self;
-} ## end sub new
+has [qw< app _guard path url >];
 
 sub handler {
    my ($self, $args) = @_;
@@ -96,6 +69,33 @@ sub handler {
       return $c->rendered(204);
    };
 } ## end sub handler
+
+sub new {
+   my $package = shift;
+   my $self    = $package->SUPER::new(@_);
+
+   my $args = (@_ && ref($_[0])) ? $_[0] : {@_};
+
+   my $path = $self->path;
+   if (!defined($path)) {
+      my $url = $self->url
+        or ouch 500, 'undefined path and url for WebHook';
+      $path = Mojo::URL->new($url)->path->to_string;
+      $self->path($path);
+   } ## end if (!defined($path))
+
+   my $r = $args->{routes} // $self->app->routes;
+   my $route = $r->post($path => $self->handler);
+
+   $self->register() if $args->{register};
+
+   if ($args->{unregister}) {
+      my $token = $self->token;
+      $self->_guard(Bot::ChatBots::Utils::guard(sub { _register($token) }));
+   }
+
+   return $self;
+} ## end sub new
 
 sub register {
    my $self = shift;
