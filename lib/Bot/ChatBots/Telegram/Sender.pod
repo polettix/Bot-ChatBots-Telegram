@@ -1,0 +1,136 @@
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+Bot::ChatBots::Telegram::Sender - Convenience class for sending Telegram calls
+
+=head1 SYNOPSIS
+
+   use Bot::ChatBots::Telegram::Sender;
+   my $sender = Bot::ChatBots::Telegram::Sender->new(token => $ENV{TOKEN});
+
+=head1 DESCRIPTION
+
+This is a class wrapping L<WWW::Telegram::BotAPI> for convenient usage within
+the Bot::ChatBots system.
+
+The L</send> method allows you to send a message. It provides a few DWIM
+features but it's basically a thin wrapper around
+L<WWW::Telegram::BotAPI/api_request>, which you are encouraged to see.
+
+The L</processor> method provides you a convenience wrapper around L</send>
+that implements a tube you can put in a pipeline.
+
+=head1 METHODS
+
+This class derives from L<Bot::ChatBots::Telegram::Base> and inherits all of its
+methods. This is probably a bit bloated as some elements are not needed actually,
+but it was simple to do.
+
+=head2 B<< async >>
+
+   $obj->async(1);
+   my $is_async = $obj->async;
+
+Expose the C<async> functionality in L<WWW::Telegram::BotAPI>. It is true by
+default.
+
+=head2 B<< callback >>
+
+   $obj->callback(sub{ ... });
+   my $cb = $obj->callback;
+
+Accessor for an optional callback function that will be used (possibly) by
+L</send>.
+
+=head2 B<< processor >>
+
+   my $tube = $obj->processor;
+
+Generator for a Telegram sender processor. It calls L</send> for you, using
+any L</callback> if set, and setting the outcome of the call in field
+C<telegram_res> (it might be different things depending on L</async> and the
+presence of a callback, of course). The record is then returned by the tube
+function.
+
+=head2 B<< send >>
+
+   $obj->send($request); # OR
+   $obj->send($request, $callback);
+
+Send a request via L<WWW::Telegram::BotAPI>.
+
+The request can be:
+
+=over
+
+=item *
+
+a plain string. In this case, it is assumed that you want to call method
+C<sendMessage> with the provided C<$request> as the C<text>;
+
+=item *
+
+a hash reference. This should be compliant with what accepted by
+L<WWW::Telegram::BotAPI/api_request>, with the following extensions:
+
+=over
+
+=item *
+
+you can set the method to call either with field C<telegram_method>, which is
+expected to have the same name as the real Telegram methods, or via field
+C<method>, that provide a translation (currently, it's only C<send> that is
+turned into C<sendMessage>);
+
+=back
+
+You can optionally pass a C<$callback> function that will be called if L</async>
+is true. If not passed, the one defined in L</callback> is used (if present).
+
+=back
+
+=head2 B<< telegram >>
+
+   my $telegram = $obj->telegram;
+   $obj->token(WWW::Telegram::BotAPI->new(...));
+
+Accessor for the L<WWW::Telegram::BotAPI> object, if you want to use it or set
+a new one.
+
+By default, when needed one is instantiated lazily based on the available
+C<token> and with the current L</async> setting. This lazy initialization also
+takes care to start L<Mojo::IOLoop> if it's not already running.
+
+=head2 B<< typename >>
+
+   my $tn = $obj->typename;
+   $obj->typename('Friendly Bastard');
+
+Accessor for a typename, which can come handy in logging/debugging. It defaults to
+the class name.
+
+
+=head1 SEE ALSO
+
+L<Bot::ChatBots>, L<Bot::ChatBots::Telegram::LongPoll>.
+L<Bot::ChatBots::Telegram::WebHooks>.
+
+=head1 AUTHOR
+
+Flavio Poletti <polettix@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2016 by Flavio Poletti <polettix@cpan.org>
+
+This module is free software. You can redistribute it and/or modify it
+under the terms of the Artistic License 2.0.
+
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
+
+=cut
