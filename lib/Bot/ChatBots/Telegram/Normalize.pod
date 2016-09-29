@@ -1,0 +1,157 @@
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+Bot::ChatBots::Telegram::Normalize - Normalization adapter for B::C::Telegram
+
+=head1 SYNOPSIS
+
+   use Bot::ChatBots::Telegram::Normalizer;
+   my $tube = Bot::ChatBots::Telegram::Normalizer->processor;
+
+   my $normalized_record = $tube($telegram_record);
+
+=head1 DESCRIPTION
+
+This module implements a record normalization function for messages received
+from Telegram (aka I<Updates>). It derives from L<Bot::ChatBots::Base> and
+inherits all of its methods.
+
+
+This module allows you to to define L<Bot::ChatBots> for
+L<Telegram Messenger|https://telegram.org/>.
+
+
+=head1 METHODS
+
+Bot::ChatBots::Telegram::Normalize derives from L<Bot::ChatBots::Base> and
+inherits all of its methods (notably, the L<Bot::ChatBots::Base/processor> method
+that gives you a tube that wraps L</process> defined below).
+
+=head2 B<< process >>
+
+   my $normalized_record = $obj_or_class->process($telegram_record);
+
+Transform a record received from Telegram into a normalized one. The concept of
+I<normalized record> is still in a bit of flux, but this is what is done:
+
+=over
+
+=item *
+
+the sender of the update is set in field C<sender>, which is a hash reference
+that includes what comes as C<from> (i.e. it includes an C<id> field)
+
+=item *
+
+the channel where the sender sent the message is set in field C<channel>, as a
+copy of what comes as C<chat>. In this hash reference there will also be an
+additional field C<fqid> that is obtained by merging fields C<type> and C<id>
+via a slash (e.g. C<private/12345678>)
+
+=item *
+
+the payload of the Update is set in field C<payload>. Telegram messages come
+as hash references that can contain different payloads (e.g. C<message>,
+C<edited_message>, etc. see L<here|https://core.telegram.org/bots/api#update>),
+you will always get them also as C<payload> then.
+
+The type of the payload is set in field C<type>.
+
+=item *
+
+inside the C<source> sub-hash, field C<technology> is set to the string
+C<telegram>, while the field C<token> is set to whatever is in field
+C<object_token> unless already defined.
+
+=back
+
+Example:
+
+   $input_record = {
+      update => {
+         message => {
+            from => {
+               id => 7890,
+               first_name => 'Foo',
+            },
+            chat => {
+               id => 1479,
+               type => 'private',
+            }
+            text => 'whatever',
+         },
+         update_id => 12345,
+      },
+      source => {
+         object_token => 'blah',
+      },
+   }
+
+   my $output_record = $class->process($input_record);
+   # {
+   #    channel => {
+   #       id   => 1479,
+   #       fqid => 'private/1479',
+   #       type => 'private',
+   #    },
+   #    payload => {
+   #       from => {
+   #          id         => 7890,
+   #          first_name => 'Foo',
+   #       },
+   #       chat => {
+   #          id   => 1479,
+   #          type => 'private',
+   #       }
+   #       text => 'whatever',
+   #    },
+   #    sender => {
+   #       id         => 7890,
+   #       first_name => 'Foo',
+   #    },
+   #    source => {
+   #       object_token => 'blah',
+   #       technology   => 'telegram',
+   #       token        => 'blah',
+   #    },
+   #    type => 'message',
+   #    update => {
+   #       message => {
+   #          from => {
+   #             id         => 7890,
+   #             first_name => 'Foo',
+   #          },
+   #          chat => {
+   #             id   => 1479,
+   #             type => 'private',
+   #          },
+   #          text => 'whatever',
+   #       },
+   #       update_id => 12345,
+   #    }
+   # }
+
+
+=head1 SEE ALSO
+
+L<Bot::ChatBots>, L<Bot::ChatBots::Base>, L<Bot::ChatBots::Telegram>.
+
+=head1 AUTHOR
+
+Flavio Poletti <polettix@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2016 by Flavio Poletti <polettix@cpan.org>
+
+This module is free software. You can redistribute it and/or modify it
+under the terms of the Artistic License 2.0.
+
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
+
+=cut
