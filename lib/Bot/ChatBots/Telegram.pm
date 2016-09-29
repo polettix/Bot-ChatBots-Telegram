@@ -26,7 +26,7 @@ sub register {
    $self->sources([]);
 
    # add helper to be usable
-   $app->helper(telegram => sub { return $self });
+   $app->helper('chatbots.telegram' => sub { return $self });
 
    # set logger for Log::Any, if needed
    my $spec = exists($conf->{logger}) ? $conf->{logger} : 'auto';
