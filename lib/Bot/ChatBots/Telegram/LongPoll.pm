@@ -32,6 +32,12 @@ sub new {
    return $self;
 } ## end sub new
 
+sub send {
+   my $self    = shift;
+   my $message = shift;
+   return $self->sender->send($message, (@_ ? shift : $self->callback));
+}
+
 sub start {
    my $self     = shift;
    my $args     = (@_ && ref($_[0])) ? $_[0] : {@_};
@@ -102,11 +108,5 @@ sub start {
 
    return $self;
 } ## end sub start
-
-sub send {
-   my $self    = shift;
-   my $message = shift;
-   return $self->sender->send($message, (@_ ? shift : $self->callback));
-}
 
 1;
