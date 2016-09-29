@@ -18,6 +18,18 @@ has telegram => sub {
    return $tg;
 };
 
+sub processor {
+   my $self   = shift;
+   my $logger = $self->logger;
+   return sub {
+      my $record = shift;
+      $logger->debug($self->name);
+      $record->{telegram_res} =
+        $self->send($record->{output}, $self->callback);
+      return $record;
+   };
+} ## end sub processor
+
 sub send {
    my ($self, $message, $callback) = @_;
 
@@ -42,17 +54,5 @@ sub send {
       ($callback ? $callback : ())
    );
 } ## end sub send
-
-sub processor {
-   my $self   = shift;
-   my $logger = $self->logger;
-   return sub {
-      my $record = shift;
-      $logger->debug($self->name);
-      $record->{telegram_res} =
-        $self->send($record->{output}, $self->callback);
-      return $record;
-   };
-} ## end sub processor
 
 1;
