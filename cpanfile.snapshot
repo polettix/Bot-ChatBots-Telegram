@@ -1,5 +1,20 @@
 # carton snapshot format: version 1.0
 DISTRIBUTIONS
+  B-Hooks-EndOfScope-0.21
+    pathname: E/ET/ETHER/B-Hooks-EndOfScope-0.21.tar.gz
+    provides:
+      B::Hooks::EndOfScope 0.21
+      B::Hooks::EndOfScope::PP 0.21
+      B::Hooks::EndOfScope::XS 0.21
+    requirements:
+      ExtUtils::MakeMaker 0
+      Module::Implementation 0.05
+      Sub::Exporter::Progressive 0.001006
+      Text::ParseWords 0
+      Variable::Magic 0.48
+      perl 5.008001
+      strict 0
+      warnings 0
   Bot-ChatBots-0.001
     pathname: P/PO/POLETTIX/Bot-ChatBots-0.001.tar.gz
     provides:
@@ -14,6 +29,19 @@ DISTRIBUTIONS
       Module::Build::Tiny 0.034
       Module::Runtime 0.014
       perl 5.010
+  Class-Method-Modifiers-2.12
+    pathname: E/ET/ETHER/Class-Method-Modifiers-2.12.tar.gz
+    provides:
+      Class::Method::Modifiers 2.12
+    requirements:
+      B 0
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      base 0
+      perl 5.006
+      strict 0
+      warnings 0
   Cpanel-JSON-XS-3.0217
     pathname: R/RU/RURBAN/Cpanel-JSON-XS-3.0217.tar.gz
     provides:
@@ -35,6 +63,26 @@ DISTRIBUTIONS
       Symbol 0
       Test 0
       perl 5.006
+  Devel-GlobalDestruction-0.14
+    pathname: H/HA/HAARG/Devel-GlobalDestruction-0.14.tar.gz
+    provides:
+      Devel::GlobalDestruction 0.14
+    requirements:
+      ExtUtils::MakeMaker 0
+      Sub::Exporter::Progressive 0.001011
+      perl 5.006
+  Dist-CheckConflicts-0.11
+    pathname: D/DO/DOY/Dist-CheckConflicts-0.11.tar.gz
+    provides:
+      Dist::CheckConflicts 0.11
+    requirements:
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 6.30
+      Module::Runtime 0.009
+      base 0
+      strict 0
+      warnings 0
   Encode-Locale-1.05
     pathname: G/GA/GAAS/Encode-Locale-1.05.tar.gz
     provides:
@@ -357,6 +405,17 @@ DISTRIBUTIONS
       perl 5.006
       strict 0
       warnings 0
+  Module-Implementation-0.09
+    pathname: D/DR/DROLSKY/Module-Implementation-0.09.tar.gz
+    provides:
+      Module::Implementation 0.09
+    requirements:
+      Carp 0
+      ExtUtils::MakeMaker 0
+      Module::Runtime 0.012
+      Try::Tiny 0
+      strict 0
+      warnings 0
   Module-Runtime-0.014
     pathname: Z/ZE/ZEFRAM/Module-Runtime-0.014.tar.gz
     provides:
@@ -483,6 +542,36 @@ DISTRIBUTIONS
       JSON::PP 2.27103
       Pod::Simple 3.09
       Time::Local 1.2
+  Moo-2.002005
+    pathname: H/HA/HAARG/Moo-2.002005.tar.gz
+    provides:
+      Method::Generate::Accessor undef
+      Method::Generate::BuildAll undef
+      Method::Generate::Constructor undef
+      Method::Generate::DemolishAll undef
+      Moo 2.002005
+      Moo::HandleMoose undef
+      Moo::HandleMoose::FakeConstructor undef
+      Moo::HandleMoose::FakeMetaClass undef
+      Moo::HandleMoose::_TypeMap undef
+      Moo::Object undef
+      Moo::Role 2.002005
+      Moo::_Utils undef
+      Moo::_mro undef
+      Moo::_strictures undef
+      Moo::sification undef
+      Sub::Defer 2.002005
+      Sub::Quote 2.002005
+      oo undef
+    requirements:
+      Class::Method::Modifiers 1.1
+      Devel::GlobalDestruction 0.11
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      Module::Runtime 0.014
+      Role::Tiny 2.000004
+      Scalar::Util 0
+      perl 5.006
   Mozilla-CA-20160104
     pathname: A/AB/ABH/Mozilla-CA-20160104.tar.gz
     provides:
@@ -523,6 +612,36 @@ DISTRIBUTIONS
     requirements:
       ExtUtils::MakeMaker 6.30
       Test::More 0
+  Package-Stash-0.37
+    pathname: D/DO/DOY/Package-Stash-0.37.tar.gz
+    provides:
+      Package::Stash 0.37
+      Package::Stash::PP 0.37
+    requirements:
+      B 0
+      Carp 0
+      Config 0
+      Dist::CheckConflicts 0.02
+      ExtUtils::MakeMaker 0
+      File::Spec 0
+      Getopt::Long 0
+      Module::Implementation 0.06
+      Package::Stash::XS 0.26
+      Scalar::Util 0
+      Symbol 0
+      Text::ParseWords 0
+      constant 0
+      strict 0
+      warnings 0
+  Package-Stash-XS-0.28
+    pathname: D/DO/DOY/Package-Stash-XS-0.28.tar.gz
+    provides:
+      Package::Stash::XS 0.28
+    requirements:
+      ExtUtils::MakeMaker 6.30
+      XSLoader 0
+      strict 0
+      warnings 0
   Path-Tiny-0.096
     pathname: D/DA/DAGOLDEN/Path-Tiny-0.096.tar.gz
     provides:
@@ -548,6 +667,20 @@ DISTRIBUTIONS
       perl 5.008001
       strict 0
       warnings 0
+  Role-Tiny-2.000005
+    pathname: H/HA/HAARG/Role-Tiny-2.000005.tar.gz
+    provides:
+      Role::Tiny 2.000005
+      Role::Tiny::With 2.000005
+    requirements:
+      Exporter 5.57
+      perl 5.006
+  Sub-Exporter-Progressive-0.001013
+    pathname: F/FR/FREW/Sub-Exporter-Progressive-0.001013.tar.gz
+    provides:
+      Sub::Exporter::Progressive 0.001013
+    requirements:
+      ExtUtils::MakeMaker 0
   Template-Perlish-1.52
     pathname: P/PO/POLETTIX/Template-Perlish-1.52.tar.gz
     provides:
@@ -769,6 +902,25 @@ DISTRIBUTIONS
       parent 0
       perl 5.008001
       utf8 0
+  Variable-Magic-0.60
+    pathname: V/VP/VPIT/Variable-Magic-0.60.tar.gz
+    provides:
+      Variable::Magic 0.60
+    requirements:
+      Carp 0
+      Config 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      IO::Handle 0
+      IO::Select 0
+      IPC::Open3 0
+      POSIX 0
+      Socket 0
+      Test::More 0
+      XSLoader 0
+      base 0
+      lib 0
+      perl 5.008
   WWW-RobotRules-6.02
     pathname: G/GA/GAAS/WWW-RobotRules-6.02.tar.gz
     provides:
@@ -848,4 +1000,13 @@ DISTRIBUTIONS
       URI 1.10
       URI::Escape 0
       WWW::RobotRules 6
+      perl 5.008001
+  namespace-clean-0.27
+    pathname: R/RI/RIBASUSHI/namespace-clean-0.27.tar.gz
+    provides:
+      namespace::clean 0.27
+    requirements:
+      B::Hooks::EndOfScope 0.12
+      ExtUtils::MakeMaker 0
+      Package::Stash 0.23
       perl 5.008001
