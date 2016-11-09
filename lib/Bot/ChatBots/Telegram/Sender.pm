@@ -33,9 +33,11 @@ sub send_message {
    ouch 500, 'no output to send' unless defined $message;
 
    # message normalization
-   $message = {text => $message, telegram_method => 'sendMessage'}
-     unless ref $message;
-   my $method = delete(local $message->{telegram_method}) // do {
+   $message =
+     ref($message)
+     ? {%$message}
+     : {text => $message, telegram_method => 'sendMessage'};
+   my $method = delete($message->{telegram_method}) // do {
       state $method_for = {
          send        => 'sendMessage',
          sendMessage => 'sendMessage',
@@ -48,12 +50,12 @@ sub send_message {
 
    if (!exists $message->{chat_id}) {
       if (defined $args{record}) {    # take from $record
-         $message->{chat_id}{id} = $args{record}{sender}{id};
+         $message->{chat_id} = $args{record}{channel}{id};
       }
       elsif ($self->has_recipient) {
-         $message->{chat_id}{id} = $self->recipient;
+         $message->{chat_id} = $self->recipient;
       }
-      else {                    # no more ways to figure it out
+      else {                          # no more ways to figure it out
          ouch 500, 'no chat identifier for message';
       }
    } ## end if (!exists $message->...)

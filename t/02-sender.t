@@ -58,49 +58,37 @@ is_deeply $fuas[0],
   ],
   'what was sent in post';
 
-done_testing();
-__END__
-
-
-
-
-
-
-
 @fuas = ();
 lives_ok {
-   $sender->send_message('hey', {sender => {id => 'you'}});
+   $sender->send_message('hey', record => {channel => {id => 'you'}});
 }
 'send message with update for sender lives';
-
 is scalar(@fuas), 1, '1 post sent';
 is_deeply $fuas[0],
   [
-   'http://www.example.com/the/api?access_token=whatever',
-   {Accept => 'application/json'},
-   json => {
-      message   => {text => 'hey'},
-      recipient => {id   => 'you'},
-   }
+     'sendMessage',
+     {
+       'text' => 'hey',
+       'chat_id' => 'you',
+     }
   ],
   'what was sent in post';
 
 lives_ok { $sender->recipient('they') } 'set default recipient';
+
 @fuas = ();
 lives_ok {
    $sender->send_message('hey no explicit recipient');
 }
 'send message with default recipient';
-
 is scalar(@fuas), 1, '1 post sent';
 is_deeply $fuas[0],
   [
-   'http://www.example.com/the/api?access_token=whatever',
-   {Accept => 'application/json'},
-   json => {
-      message   => {text => 'hey no explicit recipient'},
-      recipient => {id   => 'they'},
-   }
+     'sendMessage',
+     {
+       'text' => 'hey no explicit recipient',
+       'chat_id' => 'they',
+     }
   ],
   'what was sent in post';
 
