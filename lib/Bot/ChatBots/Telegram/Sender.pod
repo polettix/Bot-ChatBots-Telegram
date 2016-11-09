@@ -11,6 +11,8 @@ Bot::ChatBots::Telegram::Sender - Convenience class for sending Telegram calls
    use Bot::ChatBots::Telegram::Sender;
    my $sender = Bot::ChatBots::Telegram::Sender->new(token => $ENV{TOKEN});
 
+   $sender->send_message({text => 'hey', chat_id => $chat_id});
+
 =head1 DESCRIPTION
 
 This is a class wrapping L<WWW::Telegram::BotAPI> for convenient usage within
@@ -20,77 +22,9 @@ The L</send> method allows you to send a message. It provides a few DWIM
 features but it's basically a thin wrapper around
 L<WWW::Telegram::BotAPI/api_request>, which you are encouraged to see.
 
-The L</processor> method provides you a convenience wrapper around L</send>
-that implements a tube you can put in a pipeline.
+=head1 ATTRIBUTES
 
-=head1 METHODS
-
-This class derives from L<Bot::ChatBots::Telegram::Base> and inherits all of its
-methods. This is probably a bit bloated as some elements are not needed actually,
-but it was simple to do.
-
-=head2 B<< async >>
-
-   $obj->async(1);
-   my $is_async = $obj->async;
-
-Expose the C<async> functionality in L<WWW::Telegram::BotAPI>. It is true by
-default.
-
-=head2 B<< callback >>
-
-   $obj->callback(sub{ ... });
-   my $cb = $obj->callback;
-
-Accessor for an optional callback function that will be used (possibly) by
-L</send>.
-
-=head2 B<< processor >>
-
-   my $tube = $obj->processor;
-
-Generator for a Telegram sender processor. It calls L</send> for you, using
-any L</callback> if set, and setting the outcome of the call in field
-C<telegram_res> (it might be different things depending on L</async> and the
-presence of a callback, of course). The record is then returned by the tube
-function.
-
-=head2 B<< send >>
-
-   $obj->send($request); # OR
-   $obj->send($request, $callback);
-
-Send a request via L<WWW::Telegram::BotAPI>.
-
-The request can be:
-
-=over
-
-=item *
-
-a plain string. In this case, it is assumed that you want to call method
-C<sendMessage> with the provided C<$request> as the C<text>;
-
-=item *
-
-a hash reference. This should be compliant with what accepted by
-L<WWW::Telegram::BotAPI/api_request>, with the following extensions:
-
-=over
-
-=item *
-
-you can set the method to call either with field C<telegram_method>, which is
-expected to have the same name as the real Telegram methods, or via field
-C<method>, that provide a translation (currently, it's only C<send> that is
-turned into C<sendMessage>);
-
-=back
-
-You can optionally pass a C<$callback> function that will be called if L</async>
-is true. If not passed, the one defined in L</callback> is used (if present).
-
-=back
+This class composes L<Bot::ChatBots::Role::Sender> and inherits all of its accessors.
 
 =head2 B<< telegram >>
 
@@ -104,13 +38,98 @@ By default, when needed one is instantiated lazily based on the available
 C<token> and with the current L</async> setting. This lazy initialization also
 takes care to start L<Mojo::IOLoop> if it's not already running.
 
-=head2 B<< typename >>
+=head2 B<< token >>
 
-   my $tn = $obj->typename;
-   $obj->typename('Friendly Bastard');
+   my $token = $obj->token;
+   $obj->token($new_token);
 
-Accessor for a typename, which can come handy in logging/debugging. It defaults to
-the class name.
+Accessor for the Telegram token.
+
+
+=head1 METHODS
+
+This class composes L<Bot::ChatBots::Role::Sender> and inherits all of its
+methods.
+
+=head2 B<< send_message >>
+
+   $obj->send_message($message); # OR
+   $obj->send_message($message, \%args);
+
+Do actual sending of a message. This method leverages on L</telegram> to
+do the actual network traffic.
+
+A Telegram message is required to have the following structure:
+
+   {
+      chat_id => $id_of_recipient_chat,
+      text => $your_message,
+   }
+
+If the input C<$message> is a hash reference, the C<text> part is supposed
+to be OK, otherwise the input C<$message> is considered to be the text of
+the message.
+
+As an extension, you can also pass the method to be called on the
+L</telegram> object, in two ways:
+
+=over
+
+=item *
+
+via option C<telegram_method>, which assumes you will use the right method
+name;
+
+=item *
+
+via option C<method>, which supports some aliases. To date the only alias
+supported is C<send> in lieu of C<sendMessage>.
+
+=back
+
+The argument C<%args> supports the following keys:
+
+=over
+
+=item C<callback>
+
+A sub reference to be used as a callback for a non-blocking call to the
+L</telegram> client.
+
+=item C<record>
+
+The input record, e.g. coming from a webhook, useful for getting the
+recipient of the message.
+
+If the C<chat_id> key in the incoming C<$message> is missing, it is
+possibly auto-filled based on the following algorithm:
+
+=over
+
+=item *
+
+if a C<$args{record}> is provided, then the C<< $args{record}{channel}{id}
+>> is taken from it;
+
+=item *
+
+otherwise, if the L<Bot::ChatBots::Role::Sender/has_recipient> method
+returns a true value, then L<Bot::ChatBots::Role::Sender/recipient> is
+used;
+
+=item *
+
+otherwise an exception is thrown (L<Ouch> with code 500).
+
+=back
+
+=item C<start_loop>
+
+Boolean value to signal if you want the L<Mojo::IOLoop> to be started
+automatically (otherwise L<Bot::ChatBots::Role::Sender/start_loop> is
+used).
+
+=back
 
 
 =head1 SEE ALSO

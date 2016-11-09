@@ -1,44 +1,40 @@
 package Bot::ChatBots::Telegram::Sender;
 use strict;
 use Ouch;
+use 5.010;
 { our $VERSION = '0.001001'; }
 
-use Mojo::Base 'Bot::ChatBots::Telegram::Base';
 use WWW::Telegram::BotAPI ();
 
-has async => 1;
-has 'callback';
-has telegram => sub {
-   my $self = shift;
-   my $tg   = WWW::Telegram::BotAPI->new(
-      token => $self->token,
-      async => $self->async
-   );
-   Mojo::IOLoop->start unless Mojo::IOLoop->is_running;    # safe side!
-   return $tg;
-};
+use Moo;
+use namespace::clean;
+with 'Bot::ChatBots::Role::Sender';
 
-sub processor {
-   my $self   = shift;
-   my $logger = $self->logger;
-   return sub {
-      my $record = shift;
-      $logger->debug($self->name);
-      $record->{telegram_res} =
-        $self->send($record->{output}, $self->callback);
-      return $record;
-   };
-} ## end sub processor
+has telegram => (
+   is      => 'rw',
+   lazy    => 1,
+   default => sub {
+      my $self = shift;
+      my $tg   = WWW::Telegram::BotAPI->new(
+         token => $self->token,
+         async => 1,
+      );
+      return $tg;
+   }
+);
 
-sub send {
-   my ($self, $message, $callback) = @_;
+has token => (
+   is       => 'ro',
+   required => 1,
+);
 
-   defined($message)
-     or ouch 500, $self->name . ': no output to send';
+sub send_message {
+   my ($self, $message, %args) = @_;
+   ouch 500, 'no output to send' unless defined $message;
 
+   # message normalization
    $message = {text => $message, telegram_method => 'sendMessage'}
      unless ref $message;
-
    my $method = delete(local $message->{telegram_method}) // do {
       state $method_for = {
          send        => 'sendMessage',
@@ -50,12 +46,28 @@ sub send {
         or ouch 500, $self->name . ": unsupported method $name";
    };
 
-   $callback //= $self->callback;
-   $callback = undef unless $self->async;
-   return $self->telegram->api_request(
-      $method => $message,
-      ($callback ? $callback : ())
-   );
-} ## end sub send
+   if (!exists $message->{chat_id}) {
+      if (defined $args{record}) {    # take from $record
+         $message->{chat_id}{id} = $args{record}{sender}{id};
+      }
+      elsif ($self->has_recipient) {
+         $message->{chat_id}{id} = $self->recipient;
+      }
+      else {                    # no more ways to figure it out
+         ouch 500, 'no chat identifier for message';
+      }
+   } ## end if (!exists $message->...)
+
+   my @callback =
+       $args{callback}     ? $args{callback}
+     : $self->has_callback ? ($self->callback)
+     :                       ();
+
+   my $res = $self->telegram->api_request($method => $message, @callback);
+
+   $self->may_start_loop(%args) if @callback;
+
+   return $res;
+} ## end sub send_message
 
 1;
