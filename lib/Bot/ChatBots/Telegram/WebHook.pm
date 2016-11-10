@@ -1,7 +1,7 @@
 package Bot::ChatBots::Telegram::WebHook;
 use strict;
 use warnings;
-{ our $VERSION = '0.001001'; }
+{ our $VERSION = '0.001002'; }
 
 use Ouch;
 use Log::Any qw< $log >;

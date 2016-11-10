@@ -39,10 +39,9 @@
       },
       "runtime" : {
          "requires" : {
-            "Bot::ChatBots" : "0.001",
+            "Bot::ChatBots" : "0.001014",
             "IO::Socket::SSL" : "2.038",
             "Log::Any" : "1.042",
-            "Log::Any::Adapter::MojoLog" : "0.02",
             "Mojolicious" : "7.08",
             "Moo" : "2.002005",
             "Ouch" : "0.0409",
@@ -61,7 +60,7 @@
       }
    },
    "release_status" : "stable",
-   "version" : "0.001001",
+   "version" : "0.001002",
    "x_contributors" : [
       "Flavio Poletti <flavio@polettix.it>"
    ]
