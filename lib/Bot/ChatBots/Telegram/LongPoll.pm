@@ -1,97 +1,119 @@
 package Bot::ChatBots::Telegram::LongPoll;
 use strict;
-use Ouch;
 { our $VERSION = '0.001001'; }
 
-use Mojo::Base 'Bot::ChatBots::Telegram::Base';
-use Mojo::UserAgent ();
+use Ouch;
+use Log::Any qw< $log >;
+use Mojo::IOLoop ();
 use IO::Socket::SSL ();    # just to be sure to complain loudly in case
-use Mojo::URL       ();
-use Mojo::IOLoop    ();
 
-has callback => sub {    # default callback allows for unblocking operation
-   my $logger = shift->logger;
-   return sub {
-      my ($ua, $tx) = @_;
-      $logger->debug('stuff completed');    # FIXME
-   };
-};
-has connect_timeout => 20;
-has interval        => 0.1;
-has sender => sub {                         # prefer has-a in this case
-   require Bot::ChatBots::Telegram::Sender;
-   return Bot::ChatBots::Telegram::Sender->new(token => shift->token);
-};
-has update_timeout => 300;
+use Moo;
+use namespace::clean;
 
-sub new {
-   my $package = shift;
-   my $self    = $package->SUPER::new(@_);
-   my $args    = (@_ && ref($_[0])) ? $_[0] : {@_};
-   $self->start($args) if (!exists($args->{start})) || $args->{start};
-   return $self;
-} ## end sub new
+with 'Bot::ChatBots::Telegram::Role::Source'; # normalize_record, token
+with 'Bot::ChatBots::Role::Source'; # processor, typename
 
-sub send {
-   my $self    = shift;
-   my $message = shift;
-   return $self->sender->send($message, (@_ ? shift : $self->callback));
+has connect_timeout => (
+   is => 'ro',
+   default => sub { return 20 },
+);
+
+has interval => (
+   is => 'ro',
+   default => sub { return 0.1 },
+);
+
+has sender => (
+   is => 'ro',
+   lazy => 1,
+   default => sub { # prefer has-a in this case
+      my $self = shift;
+      require Bot::ChatBots::Telegram::Sender;
+      return Bot::ChatBots::Telegram::Sender->new(token => $self->token);
+   },
+);
+
+has _start => (
+   is => 'ro',
+   default => sub { return 1 },
+   init_arg => 'start',
+);
+
+has update_timeout => (
+   is => 'ro',
+   default => sub { return 300 },
+);
+
+sub BUILD {
+   my $self = shift;
+   $self->start if $self->_start;
+}
+
+sub class_custom_pairs {
+   my $self = shift;
+   return (token => $self->token);
 }
 
 sub start {
    my $self     = shift;
    my $args     = (@_ && ref($_[0])) ? $_[0] : {@_};
-   my $typename = $self->typename;
-   my $name     = $self->name;
-   my $logger   = $self->logger;
 
-   my $update_timeout = $self->update_timeout();
+   my $update_timeout = $self->update_timeout;
    my %query = (timeout => $update_timeout, offset => 0);
 
-   my $sender    = $self->sender;
+   my $sender = $self->sender;
    $sender->telegram->agent->connect_timeout($self->connect_timeout)
      ->inactivity_timeout($update_timeout + 5)->max_redirects(5);
 
-   my $token = $self->token;
+   my $source = $self->pack_source($args);
 
    my $is_busy;
    my $callback = sub {
       return if $is_busy;
       $is_busy = 1;
 
-      $sender->send(
+      $sender->send_message(
          {
             %query, telegram_method => 'getUpdates',
          },
-         sub {
+         callback => sub {
             my (undef, $tx) = @_;
             my $data = $tx->res()->json();
 
             if (!$data->{ok}) {    # boolean flag
                my $description = $data->{description} // 'unknown error ';
-               $logger->error("$name: getUpdates error: $description");
+               $log->error("getUpdates error: $description");
             }
             elsif (@{$data->{result} // []}) {
                my $id;
-               for my $update (@{$data->{result}}) {
-                  $id = $update->{update_id};
-                  next if ($id < $query{offset});
-                  my $outcome = $self->process(
-                     {
-                        source => {
-                           type         => $typename,
-                           ref          => $self,
-                           args         => $args,
-                           token        => $token,
-                           object_token => $token,
-                        },
-                        update => $update,
-                     }
-                  );
+               my @updates = grep {$_->{update_id} >= $query{offset}} @{$data->{result}};
+               my $n_updates = $#updates;
+               for my $i (0 .. $n_updates) {
+                  my $update = $updates[$i];
+                  my $exception;
+                  try {
+                     my $record = $self->normalize_record(
+                        {
+                           batch => {
+                              count => ($i + 1),
+                              total => ($n_updates + 1),
+                           },
+                           source => $source,
+                           update => $update,
+                        }
+                     );
+                     my $outcome = $self->process($record);
 
-                  if (my $response = $outcome->{response}) {
-                     $sender->send($response);
-                  }
+                     $sender->send($outcome->{response})
+                        if (ref($outcome) eq 'HASH') && exists($outcome->{response});
+
+                     1;
+                  } ## end try
+                  catch {
+                     $exception = $_;
+                     $log->error(bleep $exception);
+                  };
+                  die $exception if defined($exception) && $args->{throw};
                } ## end for my $update (@{$data...})
                $query{offset} = $id + 1;    # prepare for next iteration
             } ## end elsif ($data->{result})
@@ -108,5 +130,4 @@ sub start {
 
    return $self;
 } ## end sub start
-
 1;
