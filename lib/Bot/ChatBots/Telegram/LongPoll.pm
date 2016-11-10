@@ -133,6 +133,13 @@ sub poller {
    };
 } ## end sub callback
 
+around process => sub {
+   my ($orig, $self, $record) = @_;
+   my $outcome = $orig->($self, $record);
+   $record->{source}{query}{offset} = $record->{update}{update_id} + 1;
+   return $outcome;
+};
+
 sub start {
    my $self = shift;
    Mojo::IOLoop->recurring($self->interval, $self->poller(@_));
