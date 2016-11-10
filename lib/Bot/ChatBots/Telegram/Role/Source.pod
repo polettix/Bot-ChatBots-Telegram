@@ -27,11 +27,18 @@ This role defines the accessors in the following subsections.
    my $token = $obj->token;
    $obj->token($ENV{TOKEN});
 
-Accessor for the token, used to access the Telegram service remotely.
+Accessor for the token, used to access the Telegram service remotely. This
+also has an associated predicate function L</has_token>.
 
 =head1 METHODS
 
 This method defines the methods in the following subsections.
+
+=head2 B<< has_token >>
+
+   say 'yes!' if $obj->has_token;
+
+Predicate function to assess whether a L</token> is present or not.
 
 =head2 B<< normalize_record >>
 
