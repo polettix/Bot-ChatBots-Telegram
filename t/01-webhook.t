@@ -36,10 +36,6 @@ my $message = message();
 $t->post_ok('/telegram', json => $message)->status_is(204);
 
 is scalar(@records), 1, '1 message back';
-use Data::Dumper;
-$Data::Dumper::Indent = 1;
-#diag Dumper \@records;
-
 is $records[0]{source}{technology}, 'telegram', 'technology';
 is $records[0]{sender}{id}, '1111111', 'sender id';
 is $records[0]{channel}{id}, '1111111', 'channel id';

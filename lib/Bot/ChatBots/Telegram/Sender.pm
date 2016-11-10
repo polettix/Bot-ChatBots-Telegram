@@ -48,7 +48,7 @@ sub send_message {
         or ouch 500, $self->name . ": unsupported method $name";
    };
 
-   if (!exists $message->{chat_id}) {
+   if (($method eq 'sendMessage') && (!exists $message->{chat_id})) {
       if (defined $args{record}) {    # take from $record
          $message->{chat_id} = $args{record}{channel}{id};
       }

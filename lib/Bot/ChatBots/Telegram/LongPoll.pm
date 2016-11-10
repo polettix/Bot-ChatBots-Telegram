@@ -3,9 +3,11 @@ use strict;
 { our $VERSION = '0.001001'; }
 
 use Ouch;
+use Try::Tiny;
 use Log::Any qw< $log >;
 use Mojo::IOLoop ();
 use IO::Socket::SSL ();    # just to be sure to complain loudly in case
+use List::Util qw< max >;
 
 use Moo;
 use namespace::clean;
@@ -21,6 +23,11 @@ has connect_timeout => (
 has interval => (
    is      => 'ro',
    default => sub { return 0.1 },
+);
+
+has max_redirects => (
+   is => 'ro',
+   default => sub { return 5 },
 );
 
 has sender => (
@@ -54,83 +61,83 @@ sub class_custom_pairs {
    return (token => $self->token);
 }
 
-sub start {
+sub parse_response {
+   my ($self, $res, $threshold_id) = @_;
+   my $data = $res->json // {};
+   if (!$data->{ok}) { # boolean flag from Telegram API
+      $log->error('getUpdates error: ' .
+         $data->{description} // 'unknown error');
+      return;
+   }
+
+   return grep { $_->{update_id} >= $threshold_id } @{$data->{result}//[]};
+}
+
+sub poller {
    my $self = shift;
    my $args = (@_ && ref($_[0])) ? $_[0] : {@_};
 
    my $update_timeout = $self->update_timeout;
-   my %query = (timeout => $update_timeout, offset => 0);
+   my %query = (
+      offset => 0,
+      telegram_method => 'sendUpdate',
+      timeout => $update_timeout,
+   );
 
    my $sender = $self->sender;
    $sender->telegram->agent->connect_timeout($self->connect_timeout)
-     ->inactivity_timeout($update_timeout + 5)->max_redirects(5);
+     ->inactivity_timeout($update_timeout + 5)
+     ->max_redirects($self->max_redirects);
 
-   my $source = $self->pack_source($args);
-
+   # this flag tells us whether we're in a call already, avoiding
+   # duplicates. It is set before sending a request, and reset when the
+   # response is managed
    my $is_busy;
-   my $callback = sub {
-      return if $is_busy;
-      $is_busy = 1;
 
-      $sender->send_message(
-         {
-            %query, telegram_method => 'getUpdates',
+   my $on_data = sub {
+      my ($ua, $tx) = @_;
+
+      my @updates;
+      try {
+         @updates = $self->parse_response($tx->res, $query{offset});
+      }
+      catch {
+         $log->error(bleep $_);
+         die $_ if $self->should_rethrow($args);
+      };
+
+      my @retval = $self->process_updates(
+         refs => {
+            sender => $sender,
+            tx     => $tx,
+            ua     => $ua,
          },
-         callback => sub {
-            my (undef, $tx) = @_;
-            my $data = $tx->res()->json();
-
-            if (!$data->{ok}) {    # boolean flag
-               my $description = $data->{description} // 'unknown error ';
-               $log->error("getUpdates error: $description");
-            }
-            elsif (@{$data->{result} // []}) {
-               my $id;
-               my @updates = grep { $_->{update_id} >= $query{offset} }
-                 @{$data->{result}};
-               my $n_updates = $#updates;
-               for my $i (0 .. $n_updates) {
-                  my $update = $updates[$i];
-                  my $exception;
-                  try {
-                     my $record = $self->normalize_record(
-                        {
-                           batch => {
-                              count => ($i + 1),
-                              total => ($n_updates + 1),
-                           },
-                           source => $source,
-                           update => $update,
-                        }
-                     );
-                     my $outcome = $self->process($record);
-
-                     $sender->send($outcome->{response})
-                       if (ref($outcome) eq 'HASH')
-                       && exists($outcome->{response});
-
-                     1;
-                  } ## end try
-                  catch {
-                     $exception = $_;
-                     $log->error(bleep $exception);
-                  };
-                  die $exception if defined($exception) && $args->{throw};
-               } ## end for my $i (0 .. $n_updates)
-               $query{offset} = $id + 1;    # prepare for next iteration
-            } ## end elsif (@{$data->{result} ...})
-
-            # reset "is busy?" flag for next iteration
-            $is_busy = 0;
+         source_pairs => {
+            query => \%query,
          },
+         updates => \@updates,
+         %$args, # may override it all!
       );
 
+      # if we get here, somehow me managed to get past this call... Get
+      # ready for the next one. Just to be on the safe side, we will
+      # advance $query{offset} anyway
+      $query{offset} = 1 + max map { $_->{update_id} } @updates;
+      $is_busy = 0;
    };
-   Mojo::IOLoop->recurring($self->interval, $callback);
 
+   return sub {
+      return if $is_busy;
+      $is_busy = 1; # $on_data below will reset $is_busy when ready
+      $sender->send_message(\%query, callback => $on_data);
+   };
+} ## end sub callback
+
+sub start {
+   my $self = shift;
+   Mojo::IOLoop->recurring($self->interval, $self->poller(@_));
    Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
-
    return $self;
-} ## end sub start
+}
 
 1;
