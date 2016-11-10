@@ -1,8 +1,7 @@
 requires 'perl',                       '5.010';
-requires 'Bot::ChatBots',              '0.001';
+requires 'Bot::ChatBots',              '0.001013';
 requires 'IO::Socket::SSL',            '2.038';
 requires 'Log::Any',                   '1.042';
-requires 'Log::Any::Adapter::MojoLog', '0.02';
 requires 'Mojolicious',                '7.08';
 requires 'Ouch',                       '0.0409';
 requires 'Try::Tiny',                  '0.27';

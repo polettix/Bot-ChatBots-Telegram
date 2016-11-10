@@ -16,8 +16,8 @@ This document describes Bot::ChatBots::Telegram version {{[ version ]}}.
    use Log::Any qw< $log >;
    use Log::Any::Adapter;
    use Mojolicious::Lite;
-   Log::Any::Adapter->set('Stderr');
-   plugin 'Bot::ChatBots::Telegram' => sources => [
+   Log::Any::Adapter->set(MojoLog => logger => app->log);
+   plugin 'Bot::ChatBots::Telegram' => instances => [
       [
          'WebHook',
          processor  => \&processor,
@@ -46,61 +46,7 @@ L<Telegram Messenger|https://telegram.org/>.
 
 =head1 METHODS
 
-=head2 B<< add_source >>
-
-   $obj->add_source($module, %args); # OR
-   $obj->add_source($module, \%args);
-
-Add a new source.
-
-The first argument C<$module> is used (via L<Bot::ChatBots::Utils/load_module>)
-to load a class and call its C<new> method with the provided C<%args>. In the
-invocation, the pair C<app> and what is available in L</app> is also passed at
-the end of the expansion of C<%args> (overriding any previous key C<app>). The
-result of this instantiation is then appended to the L</sources>.
-
-=head2 B<< app >>
-
-   my $app = $obj->app;
-   $self->app($new_app_object);
-
-Accessor for the application object.
-
-=head2 B<< register >>
-
-   $obj->register($app, $conf);
-
-L<Mojolicious::Plugin> method for registering the plugin.
-
-The registration process adds helper C<chatbots.telegram>, that can be accessed
-from the application like this:
-
-   my $obj = app->chatbots->telegram;
-
-This will allow you to call the other methods explained in this documentation.
-
-Argument C<$conf> is a hash reference supporting the following keys:
-
-=over
-
-=item C<logger>
-
-either a logger object (supporting L<Log::Any>'s interface, please) or the string
-C<auto>, which automatically loads L<Log::Any::Adapter::MojoLog>.
-
-=item C<sources>
-
-an array reference containing definitions of sources, each represented as another
-array reference that is expanded to the arguments list for L</add_source>.
-
-=back
-
-=head2 B<< sources >>
-
-   my $aref = $obj->sources;
-   $obj->sources($array_ref);
-
-Accessor for defined sources, stored in an array reference.
+All the heavylifting is done by L<Bot::ChatBots::MojoPlugin>.
 
 =head1 BUGS AND LIMITATIONS
 
