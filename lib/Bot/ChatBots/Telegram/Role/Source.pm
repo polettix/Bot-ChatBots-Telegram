@@ -1,12 +1,20 @@
-package Bot::ChatBots::Telegram::Normalize;
+package Bot::ChatBots::Telegram::Role::Source;
 use strict;
-use Ouch;
 { our $VERSION = '0.001001'; }
 
-use Mo;
-extends 'Bot::ChatBots::Base';    # use a different technology here!
+use Ouch;
+use Log::Any;
 
-sub process {
+use Moo::Role;
+
+has token => (
+   is => 'ro',
+   lazy => 1,
+   predicate => 1,
+   default => sub { ouch 500, 'token is not defined' }
+);
+
+sub normalize_record {
    my ($self, $record) = @_;
 
    my $update = $record->{update} or ouch 500, 'no update found!';
@@ -24,6 +32,6 @@ sub process {
    $chan->{fqid} = "$chan->{type}/$chan->{id}";
 
    return $record;
-} ## end sub process
+}
 
-42;
+1;

@@ -1,5 +1,6 @@
 .build/
 *.swp
 /local/
+/epan/
 /Bot-ChatBots-Telegram-*.tar.gz
 /Bot-ChatBots-Telegram-*/
