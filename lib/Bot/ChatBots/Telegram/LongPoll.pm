@@ -10,23 +10,23 @@ use IO::Socket::SSL ();    # just to be sure to complain loudly in case
 use Moo;
 use namespace::clean;
 
-with 'Bot::ChatBots::Telegram::Role::Source'; # normalize_record, token
-with 'Bot::ChatBots::Role::Source'; # processor, typename
+with 'Bot::ChatBots::Telegram::Role::Source';    # normalize_record, token
+with 'Bot::ChatBots::Role::Source';              # processor, typename
 
 has connect_timeout => (
-   is => 'ro',
+   is      => 'ro',
    default => sub { return 20 },
 );
 
 has interval => (
-   is => 'ro',
+   is      => 'ro',
    default => sub { return 0.1 },
 );
 
 has sender => (
-   is => 'ro',
-   lazy => 1,
-   default => sub { # prefer has-a in this case
+   is      => 'ro',
+   lazy    => 1,
+   default => sub {    # prefer has-a in this case
       my $self = shift;
       require Bot::ChatBots::Telegram::Sender;
       return Bot::ChatBots::Telegram::Sender->new(token => $self->token);
@@ -34,13 +34,13 @@ has sender => (
 );
 
 has _start => (
-   is => 'ro',
-   default => sub { return 1 },
+   is       => 'ro',
+   default  => sub { return 1 },
    init_arg => 'start',
 );
 
 has update_timeout => (
-   is => 'ro',
+   is      => 'ro',
    default => sub { return 300 },
 );
 
@@ -55,8 +55,8 @@ sub class_custom_pairs {
 }
 
 sub start {
-   my $self     = shift;
-   my $args     = (@_ && ref($_[0])) ? $_[0] : {@_};
+   my $self = shift;
+   my $args = (@_ && ref($_[0])) ? $_[0] : {@_};
 
    my $update_timeout = $self->update_timeout;
    my %query = (timeout => $update_timeout, offset => 0);
@@ -86,7 +86,8 @@ sub start {
             }
             elsif (@{$data->{result} // []}) {
                my $id;
-               my @updates = grep {$_->{update_id} >= $query{offset}} @{$data->{result}};
+               my @updates = grep { $_->{update_id} >= $query{offset} }
+                 @{$data->{result}};
                my $n_updates = $#updates;
                for my $i (0 .. $n_updates) {
                   my $update = $updates[$i];
@@ -105,7 +106,8 @@ sub start {
                      my $outcome = $self->process($record);
 
                      $sender->send($outcome->{response})
-                        if (ref($outcome) eq 'HASH') && exists($outcome->{response});
+                       if (ref($outcome) eq 'HASH')
+                       && exists($outcome->{response});
 
                      1;
                   } ## end try
@@ -114,9 +116,9 @@ sub start {
                      $log->error(bleep $exception);
                   };
                   die $exception if defined($exception) && $args->{throw};
-               } ## end for my $update (@{$data...})
+               } ## end for my $i (0 .. $n_updates)
                $query{offset} = $id + 1;    # prepare for next iteration
-            } ## end elsif ($data->{result})
+            } ## end elsif (@{$data->{result} ...})
 
             # reset "is busy?" flag for next iteration
             $is_busy = 0;

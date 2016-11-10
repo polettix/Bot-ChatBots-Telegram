@@ -12,7 +12,7 @@ use Mojo::Path;
 use Moo;
 use namespace::clean;
 
-with 'Bot::ChatBots::Telegram::Role::Source'; # has normalize_record
+with 'Bot::ChatBots::Telegram::Role::Source';    # has normalize_record
 with 'Bot::ChatBots::Role::Source';
 with 'Bot::ChatBots::Role::WebHook';
 
@@ -30,7 +30,7 @@ sub register {
    my $self = shift;
    my $args = (@_ && ref($_[0])) ? $_[0] : {@_};
 
-   my $app  = $args->{app} // $self->app;
+   my $app   = $args->{app}   // $self->app;
    my $token = $args->{token} // $self->token;
 
    my $wh_url;
