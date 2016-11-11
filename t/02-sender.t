@@ -1,5 +1,5 @@
 use strict;
-use Test::More;
+use Test::More tests => 18;
 use Mock::Quick;
 use Test::Exception;
 use Bot::ChatBots::Telegram::Sender;

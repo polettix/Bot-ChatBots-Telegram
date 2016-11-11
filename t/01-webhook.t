@@ -1,5 +1,5 @@
 use strict;
-use Test::More;
+use Test::More tests => 20;
 use Mojolicious::Lite;
 use Test::Mojo;
 use Test::Exception;
