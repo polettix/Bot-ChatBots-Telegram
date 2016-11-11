@@ -33,21 +33,19 @@ around process => sub {
    # $record and $outcome might be the same, but the flag is
    # namely supported in $record
    if (  (ref($outcome) eq 'HASH')
-      && exists($outcome->{response})
+      && exists($outcome->{send_response})
       && (!$record->{source}{flags}{rendered}))
    {
-      my $message = {
+      my $message = $outcome->{sent_response} = {
          method  => 'sendMessage',
          chat_id => $record->{channel}{id},
 
-         ref($outcome->{response}) eq 'HASH'
-         ? (%{$outcome->{response}})    # shallow copy suffices
-         : (text => $outcome->{response})
+         ref($outcome->{send_response}) eq 'HASH'
+         ? (%{$outcome->{send_response}})    # shallow copy suffices
+         : (text => $outcome->{send_response})
       };
-
-      my $source = $record->{source};
-      $source->{refs}{controller}->render(json => $message);
-      $source->{flags}{rendered} = 1;
+      $record->{source}{refs}{controller}->render(json => $message);
+      $record->{source}{flags}{rendered} = 1;
    } ## end if ((ref($outcome) eq ...))
 
    return $outcome;
