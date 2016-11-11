@@ -1,6 +1,6 @@
 package Bot::ChatBots::Telegram::Role::Source;
 use strict;
-{ our $VERSION = '0.001003'; }
+{ our $VERSION = '0.001004'; }
 
 use Ouch;
 use Log::Any;
