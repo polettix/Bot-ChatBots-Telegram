@@ -24,7 +24,20 @@ L<WWW::Telegram::BotAPI/api_request>, which you are encouraged to see.
 
 =head1 ATTRIBUTES
 
-This class composes L<Bot::ChatBots::Role::Sender> and inherits all of its accessors.
+This class composes L<Bot::ChatBots::Role::Sender> and inherits all of its
+accessors.
+
+=head2 B<< start_loop >>
+
+   say 'loop starts automatically' if $obj->start_loop;
+   $obj->start_loop(0); # don't start automatically
+   $obj->start_loop(1); # start loop automatically
+
+Accessor for boolean attribute that instructs L</send_message> to start
+the L<Mojo::IOLoop> automatically. This can still be overridden by
+anything passed with key C<start_loop> in L</send_message>.
+
+Defaults to C<0> (I<false>).
 
 =head2 B<< telegram >>
 
@@ -51,9 +64,36 @@ Accessor for the Telegram token.
 This class composes L<Bot::ChatBots::Role::Sender> and inherits all of its
 methods.
 
+=head2 B<< may_start_loop >>
+
+   $self->may_start_loop(%args);
+   $self->may_start_loop(\%args);
+
+Evaluates conditions for starting L<Mojo::IOLoop>. These conditions are:
+
+=over
+
+=item *
+
+if the provided C<%args> contains a key C<start_loop>, it is used to
+establish whether to start the loop or not, OTHERWISE
+
+=item *
+
+if L</start_loop> is I<false>, the loop is not started, OTHERWISE
+
+=item *
+
+the loop is started if it's not already running.
+
+=back
+
+This method is used by L</send_message>.
+
 =head2 B<< send_message >>
 
    $obj->send_message($message); # OR
+   $obj->send_message($message, %args);
    $obj->send_message($message, \%args);
 
 Do actual sending of a message. This method leverages on L</telegram> to

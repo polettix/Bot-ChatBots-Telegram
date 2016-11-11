@@ -10,6 +10,11 @@ use Moo;
 use namespace::clean;
 with 'Bot::ChatBots::Role::Sender';
 
+has start_loop => (
+   is => 'rw',
+   default => sub { return 0 },
+);
+
 has telegram => (
    is      => 'rw',
    lazy    => 1,
@@ -27,6 +32,18 @@ has token => (
    is       => 'ro',
    required => 1,
 );
+
+# copied from Bot::ChatBot::Role::UserAgent
+sub may_start_loop {
+   my $self = shift;
+   my %args = (@_ && ref($_[0])) ? %{$_[0]} : @_;
+   my $start_loop =
+     exists($args{start_loop})
+     ? $args{start_loop}
+     : $self->start_loop;
+   Mojo::IOLoop->start if $start_loop && (!Mojo::IOLoop->is_running);
+   return $self;
+} ## end sub may_start_loop
 
 sub send_message {
    my ($self, $message, %args) = @_;
