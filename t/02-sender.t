@@ -14,7 +14,6 @@ lives_ok {
    $sender = Bot::ChatBots::Telegram::Sender->new(token => 'whatever');
 }
 'constructor lives';
-ok !$sender->has_callback,  'no callback set';
 ok !$sender->has_recipient, 'no recipient set';
 
 my @fuas;

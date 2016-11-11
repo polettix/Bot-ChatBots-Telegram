@@ -60,10 +60,14 @@ sub send_message {
       }
    } ## end if (!exists $message->...)
 
-   my @callback =
-       $args{callback}     ? $args{callback}
-     : $self->has_callback ? ($self->callback)
-     :                       ();
+   my @callback;
+   if ($args{callback}) {
+      @callback = $args{callback};
+   }
+   elsif ($self->can('callback')) {
+      my $has_callback = $self->can('has_callback') // sub { return 1 };
+      @callback = $self->callback if $has_callback->($self);
+   }
 
    my $res = $self->telegram->api_request($method => $message, @callback);
 
