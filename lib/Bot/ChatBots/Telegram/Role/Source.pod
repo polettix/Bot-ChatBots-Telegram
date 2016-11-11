@@ -10,7 +10,7 @@ Bot::ChatBots::Telegram::Role::Source - Telegram Source Role
 
    package Some::Thing;
    use Moo;
-   with 'Bot::ChatBots::Telegram::Source';
+   with 'Bot::ChatBots::Telegram::Role::Source';
    ...
 
 =head1 DESCRIPTION
