@@ -109,6 +109,31 @@ have to.
 Parse the request and extract updates from it. The current Telegram
 WebHook API sends one single update per message. Returns the update.
 
+=head2 B<< process >>
+
+   my $outcome = $obj->process($record);
+
+Process a record. The main workhorse is inherited from
+L<Bot::ChatBots::Role::WebHook>, although this wraps around it to add
+automatic sending of a response in case:
+
+=over
+
+=item *
+
+C<$outcome> is a hash reference with a C<response> key inside, AND
+
+=item *
+
+C<< $record->{source}{flags}{rendered} >> is false (i.e. the response
+hasn't been rendered yet).
+
+=back
+
+When a response is rendered, C<< $record->{source}{flags}{rendered} >> is
+set to C<1> (a I<true> value) to signal that rendering already happened
+(this should prevent the calling function from doing the rendering again).
+
 =head2 B<< register >>
 
    $obj->register(%args);

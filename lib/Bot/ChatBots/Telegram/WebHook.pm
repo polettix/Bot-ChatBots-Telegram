@@ -26,6 +26,33 @@ sub parse_request {
    return $req->json;
 }
 
+around process => sub {
+   my ($orig, $self, $record) = @_;
+   my $outcome = $orig->($self, $record);
+
+   # $record and $outcome might be the same, but the flag is
+   # namely supported in $record
+   if (  (ref($outcome) eq 'HASH')
+      && exists($outcome->{response})
+      && (!$record->{source}{flags}{rendered}))
+   {
+      my $message = {
+         method  => 'sendMessage',
+         chat_id => $record->{channel}{id},
+
+         ref($outcome->{response}) eq 'HASH'
+         ? (%{$outcome->{response}})    # shallow copy suffices
+         : (text => $outcome->{response})
+      };
+
+      my $source = $record->{source};
+      $source->{refs}{controller}->render(json => $message);
+      $source->{flags}{rendered} = 1;
+   } ## end if ((ref($outcome) eq ...))
+
+   return $outcome;
+};
+
 sub register {
    my $self = shift;
    my $args = (@_ && ref($_[0])) ? $_[0] : {@_};
