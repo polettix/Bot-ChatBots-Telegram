@@ -60,6 +60,17 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/polettix/Bot-ChatBots-Telegram/issues"
+      },
+      "homepage" : "https://github.com/polettix/Bot-ChatBots-Telegram",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/polettix/Bot-ChatBots-Telegram.git",
+         "web" : "https://github.com/polettix/Bot-ChatBots-Telegram"
+      }
+   },
    "version" : "0.001007",
    "x_contributors" : [
       "Flavio Poletti <flavio@polettix.it>"
