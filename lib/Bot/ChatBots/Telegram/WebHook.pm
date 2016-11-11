@@ -13,7 +13,6 @@ use Moo;
 use namespace::clean;
 
 with 'Bot::ChatBots::Telegram::Role::Source';    # has normalize_record
-with 'Bot::ChatBots::Role::Source';
 with 'Bot::ChatBots::Role::WebHook';
 
 sub BUILD {

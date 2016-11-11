@@ -66,10 +66,6 @@ L<Bot::ChatBots::Telegram::Role::Source>
 
 =item *
 
-L<Bot::ChatBots::Role::Source>
-
-=item *
-
 L<Bot::ChatBots::Role::WebHook>
 
 =back
@@ -83,10 +79,6 @@ This class consumes the following roles, inheriting their methods:
 =item *
 
 L<Bot::ChatBots::Telegram::Role::Source>
-
-=item *
-
-L<Bot::ChatBots::Role::Source>
 
 =item *
 
