@@ -46,8 +46,10 @@ sub may_start_loop {
 } ## end sub may_start_loop
 
 sub send_message {
-   my ($self, $message, %args) = @_;
+   my ($self, $message) = splice @_, 0, 2;
    ouch 500, 'no output to send' unless defined $message;
+
+   my %args = (@_ && ref($_[0])) ? %{$_[0]} : @_;
 
    # message normalization
    $message =
