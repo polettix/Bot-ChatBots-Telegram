@@ -53,6 +53,7 @@
       },
       "test" : {
          "requires" : {
+            "Mock::Quick" : "1.111",
             "Path::Tiny" : "0.096",
             "Test::More" : "0.88",
             "Test::Trap" : "0"
