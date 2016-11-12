@@ -1,4 +1,7 @@
 {{$NEXT}}
+
+0.002001  2016-11-12 16:54:04 CET
+   - add missing dependency on Mock::Quick
    - tracking project via Travis-CI (.travis.yml)
    - badges!
 

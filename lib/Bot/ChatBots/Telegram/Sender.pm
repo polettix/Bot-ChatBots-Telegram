@@ -2,7 +2,7 @@ package Bot::ChatBots::Telegram::Sender;
 use strict;
 use Ouch;
 use 5.010;
-{ our $VERSION = '0.002'; }
+{ our $VERSION = '0.002001'; }
 
 use WWW::Telegram::BotAPI ();
 
