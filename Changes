@@ -1,4 +1,5 @@
 {{$NEXT}}
+   - tracking project via Travis-CI (.travis.yml)
 
 0.002  2016-11-11 23:20:43 CET
    - first release on CPAN (CPAN Testers seems out these days...)
