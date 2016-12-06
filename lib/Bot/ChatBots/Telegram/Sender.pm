@@ -1,5 +1,6 @@
 package Bot::ChatBots::Telegram::Sender;
 use strict;
+use warnings;
 use Ouch;
 use 5.010;
 { our $VERSION = '0.002001'; }

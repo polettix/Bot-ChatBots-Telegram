@@ -1,5 +1,6 @@
 package Bot::ChatBots::Telegram::LongPoll;
 use strict;
+use warnings;
 { our $VERSION = '0.002001'; }
 
 use Ouch;
