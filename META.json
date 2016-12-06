@@ -39,7 +39,7 @@
       },
       "runtime" : {
          "requires" : {
-            "Bot::ChatBots" : "0.002",
+            "Bot::ChatBots" : "0.006",
             "IO::Socket::SSL" : "2.038",
             "Log::Any" : "1.042",
             "Mojolicious" : "7.08",
@@ -72,7 +72,7 @@
          "web" : "https://github.com/polettix/Bot-ChatBots-Telegram"
       }
    },
-   "version" : "0.002001",
+   "version" : "0.004",
    "x_contributors" : [
       "Flavio Poletti <flavio@polettix.it>"
    ]

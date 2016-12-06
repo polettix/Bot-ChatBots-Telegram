@@ -1,7 +1,7 @@
 package Bot::ChatBots::Telegram::LongPoll;
 use strict;
 use warnings;
-{ our $VERSION = '0.002001'; }
+{ our $VERSION = '0.004'; }
 
 use Ouch;
 use Try::Tiny;
