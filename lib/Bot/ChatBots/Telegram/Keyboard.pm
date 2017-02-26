@@ -18,6 +18,19 @@ has displayable => (
    required => 1,
 );
 
+has id => (
+   is => 'ro',
+   default => sub { return 0 },
+   isa => sub {
+      my $n = shift;
+      my $complaint = 'keyboard_id MUST be an unsigned 32 bits integer';
+      ouch 500, $complaint unless $n =~ m{\A(?: 0 | [1-9]\d* )\z}mxs;
+      my $r = unpack 'N', pack 'N', $n;
+      ouch 500, $complaint unless $n eq $r;
+      return;
+   },
+);
+
 has _value_for => (
    is => 'ro',
    required => 1,
@@ -31,45 +44,66 @@ has _value_for => (
       $BOUNDARY = "\x{200D}";
    }
 
-   sub __encode {
-      my ($label, $code) = @_;
-      (my $b = unpack 'B*', pack 'N', $code) =~ s/^0+//mxs;
+   sub __encode_uint32 {
+      my $x = shift;
+      (my $b = unpack 'B32', pack 'N', $x) =~ s/^0+//mxs;
       $b = '0' unless length $b;
-      return join '', $label, $BOUNDARY, map(
-         { $_ ? $ONE : $ZERO } split //, $b
-      ), $BOUNDARY;
+      return join '', map { $_ ? $ONE : $ZERO } split //, $b;
+   }
+   sub __decode_uint32 {
+      my $x = shift;
+      my $b = join '', map { $_ eq $ONE ? '1' : '0' } split //, $x;
+      $b = substr(('0' x 32) . $b, -32, 32);
+      return unpack 'N', pack 'B32', $b;
+   }
+
+   sub __encode {
+      my ($label, $keyboard_id, $code) = @_;
+      return join '', $label,
+         $BOUNDARY, __encode_uint32($keyboard_id),
+         $BOUNDARY, __encode_uint32($code),
+         $BOUNDARY;
    }
 
    sub __decode {
       return unless defined $_[0];
-      my ($label, $ec) = $_[0] =~ m{\A(.*)$BOUNDARY((?:$ZERO|$ONE)+)$BOUNDARY\z}mxs;
-      return unless defined $ec;
-      my $binary = join '', map { $_ eq $ONE ? '1' : '0' } split //, $ec;
-      $binary = substr(('0' x 32) . $binary, -32, 32);
-      my $code = unpack 'N', pack 'B*', $binary;
-      return ($label, $code);
+      my ($label, $kid, $code) = $_[0] =~ m{
+         \A
+                      (.*)
+            $BOUNDARY ((?:$ZERO|$ONE)+)
+            $BOUNDARY ((?:$ZERO|$ONE)+)
+            $BOUNDARY
+         \z
+      }mxs;
+      return unless defined $code;
+      return ($label, __decode_uint32($kid), __decode_uint32($code));
    }
-
 }
 
 sub BUILDARGS {
    my ($class, %args) = @_;
    ouch 500, 'no input keyboard' unless exists $args{keyboard};
-   @args{qw<displayable _value_for>} = __keyboard($args{keyboard});
+   my $id = $args{id} //= 0;
+   @args{qw<displayable _value_for>} = __keyboard($args{keyboard}, $id);
    return \%args;
 }
 
-sub get_value {
-   my ($self, $x) = @_;
+sub _decode {
+   my ($self, $x, $name) = @_;
    if (ref($x) eq 'HASH') {
       $x = $x->{payload} if exists $x->{payload};
       $x = $x->{text} // undef;
    }
    elsif (ref($x)) {
-      ouch 500, 'get_value(): pass either hash references or plain scalars';
+      ouch 500, "$name(): pass either hash references or plain scalars";
    }
 
-   my ($label, $code) = __decode($x);
+   return __decode($x);
+}
+
+sub get_value {
+   my ($self, $x) = @_;
+   my (undef, undef, $code) = $self->_decode($x, 'get_value');
    return undef unless defined $code;
 
    my $vf = $self->_value_for;
@@ -80,8 +114,14 @@ sub get_value {
    return $vf->{$code};
 }
 
+sub get_keyboard_id {
+   my ($self, $x) = @_;
+   my (undef, $keyboard_id) = $self->_decode($x, 'get_keyboard_id');
+   return $keyboard_id;
+}
+
 sub __keyboard {
-   my $input = shift;
+   my ($input, $keyboard_id) = @_;
    ouch 500, 'invalid input keyboard, not an ARRAY'
      unless ref($input) eq 'ARRAY';
    ouch 500, 'invalid empty keyboard' unless @$input;
@@ -106,29 +146,34 @@ sub __keyboard {
          next unless defined $command;
          my $cc = $code_for{$command} //= $code++;
          $value_for{$cc} //= $command;
-         $display_item{text} = __encode($display_item{text}, $cc);
+         $display_item{text} = __encode($display_item{text}, $keyboard_id, $cc);
       }
    }
    return (\@display_keyboard, \%value_for);
 }
 
 sub keyboard {
-   my @input;
+   my %args;
    if (@_ > 1) {
-      @input = @_;
+      if (ref($_[0])) {
+         $args{keyboard} = [@_];
+      }
+      else {
+         %args = @_;
+      }
    }
    elsif (@_ == 1) {
       my $x = shift;
       if (@$x > 0) {
          if (ref($x->[0]) eq 'ARRAY') {
-            @input = @$x;
+            $args{keyboard} = $x;
          }
          else {
-            @input = $x; # one row only
+            $args{keyboard} = [$x]; # one row only
          }
       }
    }
-   return Bot::ChatBots::Telegram::Keyboard->new(keyboard => \@input);
+   return Bot::ChatBots::Telegram::Keyboard->new(%args);
 }
 
 

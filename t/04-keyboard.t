@@ -7,7 +7,7 @@ use Bot::ChatBots::Telegram::Keyboard qw< keyboard >;
 
 # forbid empty keyboards
 for my $in ([], [[]]) {
-   throws_ok { keyboard(@$in) } qr{invalid empty keyboard};
+   throws_ok { keyboard(@$in) } qr{no input keyboard};
 }
 
 my $input = [
@@ -63,9 +63,10 @@ my $input = [
 ];
 
 my $keyboard;
-lives_ok { $keyboard = keyboard($input) } 'keyboard() lives';
+lives_ok { $keyboard = keyboard(keyboard => $input, id => 9) } 'keyboard() lives';
 
 isa_ok $keyboard, 'Bot::ChatBots::Telegram::Keyboard';
+is $keyboard->id, 9, 'id set correctly';
 
 my $displayable;
 lives_ok { $displayable = $keyboard->displayable } 'displayable() lives';
@@ -88,6 +89,10 @@ for my $in ($input_text, $input_payload, $input_record) {
    lives_ok { $command = $keyboard->get_value($in) }
    'get_value() lives';
    is $command, '/relax +2', 'command was resolved right';
+
+   my $id;
+   lives_ok { $id = $keyboard->get_keyboard_id($in) } 'get_keyboard_id lives';
+   is $id, 9, 'retrieved id is correct';
 } ## end for my $in ($input_text...)
 
 for my $in (

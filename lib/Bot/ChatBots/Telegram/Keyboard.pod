@@ -148,7 +148,8 @@ To ease with the creation of keyboards, a helper function is available:
 =head2 B<< keyboard >>
 
    my $keyboard = keyboard(@keyboard_rows); # OR
-      $keyboard = keyboard(\@keyboard_rows);
+      $keyboard = keyboard(\@keyboard_rows); # OR
+      $keyboard = keyboard(id => $id, keyboard => \@rows);
 
 This is just a wrapper around the constructor. A such, it can throw
 exeptions, see L</DIAGNOSTICS> for the details.
@@ -221,19 +222,42 @@ found, it is assumed to be a I<payload> hash without a text and the text
 will be assumed to be C<undef>. If you want to have 100% of control,
 always pass a plain string.
 
+=head2 B<< get_keyboard_id >>
+
+   my $id = $obj_or_class->get_keyboard_id($record); # OR
+      $id = $obj_or_class->get_keyboard_id($record->{payload}); # OR
+      $id = $obj_or_class->get_keyboard_id($record->{payload}{text});
+
+Get the keyboard identifier from an input record (e.g. coming from
+a webhook). Returns an unsigned integer value. You can set this value for
+a keyboard via option C<keyboard_id> during construction, see L</new>.
+
+The input can be the same as in L</get_value>. Note that this method can
+be used as either an instance or a class method, with the same result.
+
 =head2 B<< new >>
 
-   my $kbd = Bot::ChatBots::Telegram::Keyboard->new(keyboard => \@aref);
+   my $kbd = Bot::ChatBots::Telegram::Keyboard->new(%args); # OR
+      $kbd = Bot::ChatBots::Telegram::Keyboard->new(\%args);
 
-Constructor. It accepts a C<keyboard> parameter, that must be an array of
-arrays, each of which represents a row.
+Constructor. It accepts the following parameters:
 
-The format of each row is exactly that of a regular row in a Telegram
-keyboard, i.e. it must contain one or more L<Keyboard
-Buttons|https://core.telegram.org/bots/api/#keyboardbutton>. These buttons
-are hash references exactly as stated in Telegram documentation, with the
-addition of a C<_value> parameter that holds the I<real> value to
-associate to the button (which can be retrieved via L</get_value>).
+=over
+
+=item C<< keyboard >>
+
+an array of arrays of hashes, just like a normal Telegram keyboard. As an
+extension, each keyboard button can additionally support a C<_value>
+parameter, holding the I<real> value to associate to the button (which can
+be retrieved via L</get_value>).
+
+=item C<< id >>
+
+an unsigned integer to enable distinguishing different keyboards, its
+value can be retrieved via L</get_keyboard_id> from a received record.
+Defaults to C<0>.
+
+=back
 
 This method can throw exceptions if the input is not good, see
 L</DIAGNOSTICS> for the details.
@@ -267,11 +291,6 @@ be a reference to an array of arrays of hashes. The first exception is
 thrown if the input is not an array, the second if any item inside the
 outer array is not an array itself, the third if the items in each row are
 not hashes.
-
-=item C<< invalid empty keyboard >>
-
-the input keyboard parameter provided to L</new> is empty... and this is
-not acceptable!
 
 =back
 
