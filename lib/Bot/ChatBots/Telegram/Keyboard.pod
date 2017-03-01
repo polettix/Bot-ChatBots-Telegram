@@ -116,7 +116,7 @@ where they are placed.
 As an example of the latter case, consider a keyboard in which you want to
 track two different variables, I<Happyness> and I<Relax>. You want to
 provide a button for showing their current value, and some buttons to
-increse those values. It might be something like this:
+increase those values. It might be something like this:
 
    +-----------+-----------+-----------+-----------+
    | Happyness |    +1     |    +2     |    +3     |
