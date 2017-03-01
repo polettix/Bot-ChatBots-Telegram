@@ -1,4 +1,5 @@
 {{$NEXT}}
+   - release after 181 PASSes on CPAN Testers (thanks!)
 
 0.005001  2017-02-27 00:22:46 CET
    - add keyboard id handling
