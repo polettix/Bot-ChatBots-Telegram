@@ -4,7 +4,7 @@
 
 =head1 NAME
 
-Bot::ChatBots::Telegram::LongPoll - Telegram updates receiver, long-poll
+Bot::ChatBots::Telegram::WebHook - Telegram updates receiver, web hook
 
 =head1 SYNOPSIS
 
