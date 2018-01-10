@@ -123,7 +123,8 @@ sub poller {
       # if we get here, somehow me managed to get past this call... Get
       # ready for the next one. Just to be on the safe side, we will
       # advance $query{offset} anyway
-      $query{offset} = 1 + max map { $_->{update_id} } @updates;
+      $query{offset} = 1 + max map { $_->{update_id} } @updates
+         if @updates;
       $is_busy = 0;
    };
 
