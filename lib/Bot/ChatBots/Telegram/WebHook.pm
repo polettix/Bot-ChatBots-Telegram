@@ -15,9 +15,18 @@ use namespace::clean;
 with 'Bot::ChatBots::Telegram::Role::Source';    # has normalize_record
 with 'Bot::ChatBots::Role::WebHook';
 
+has auto_register => (is => 'ro', default => 0, ini_arg => 'register');
+has auto_unregister => (is => 'ro', default => 0, ini_arg => 'unregister');
+
 sub BUILD {
    my $self = shift;
    $self->install_route;
+   $self->register if $self->auto_register;
+}
+
+sub DEMOLISH {
+   my $self = shift;
+   $self->unregister if $self->auto_unregister;
 }
 
 sub parse_request {
