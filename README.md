@@ -54,7 +54,7 @@ This document describes Bot::ChatBots::Telegram version {{\[ version \]}}.
     sub processor {
        my $record = shift;
        # do whatever you want with $record, e.g. set a quick response
-       $record->{response} = 'your thoughs are important for us!';
+       $record->{send_response} = 'your thoughs are important for us!';
        return $record;
     }
 

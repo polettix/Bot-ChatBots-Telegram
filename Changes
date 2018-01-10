@@ -1,5 +1,12 @@
 {{$NEXT}}
 
+0.007  2018-01-11 00:40:26 CET
+   - fixed issues in documentation
+   - add handling of automatic registration/unregistration in
+     WebHook
+   - fixed bug in LongPoll
+   - extended LongPoll for easy send_response
+
 0.006  2017-03-01 22:54:52 CET
    - release after 181 PASSes on CPAN Testers (thanks!)
 
