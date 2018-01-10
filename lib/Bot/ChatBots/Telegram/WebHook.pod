@@ -18,7 +18,7 @@ Bot::ChatBots::Telegram::WebHook - Telegram updates receiver, web hook
          processor  => \&processor,
          register   => 1,
          token      => $ENV{TOKEN},
-         unregister => 1,
+         unregister => 0,
          url        => 'https://example.com:8443/mybot',
       ],
       # more can follow here...
@@ -57,7 +57,6 @@ this can be).
 
 This class consumes the following roles, inheriting their accessors:
 
-
 =over
 
 =item *
@@ -69,6 +68,29 @@ L<Bot::ChatBots::Telegram::Role::Source>
 L<Bot::ChatBots::Role::WebHook>
 
 =back
+
+Additionally, it provides the following ones:
+
+=head2 B<< auto_register >>
+
+   my $boolean = $obj->auto_register;
+
+get the value of the automatic registration flag, which can be set upon
+construction via option C<register>. When set, the L</register> method
+will be called automatically upon construction.
+
+=head2 B<< auto_unregister >>
+
+   my $boolean = $obj->auto_unregister;
+
+get the value of the automatic unregistration flag, which can be set upon
+construction via option C<unregister>. When set, the L</unregister> method
+will be called automatically upon destruction.
+
+Note that some PaaS environment (notably Dokku) might keep the "old"
+instance around while the new one is already up and running. In this case,
+it is suggested to keep this boolean value to its default false value and
+avoid unwanted unregistrations.
 
 =head1 METHODS
 
@@ -92,7 +114,13 @@ The following sections describe the addiitonal ones.
 
 This method is called upon object construction. It takes care to call
 L</install_route> from L<Bot::ChatBots::Role::WebHook> so that you don't
-have to.
+have to. Additionally, if L</auto_register> is true, L</register> is
+called automatically.
+
+=head2 B<< DEMOLISH >>
+
+This method is called upon object destruction. It takes care to call
+L</unregister> if L</auto_unregister> is set to a true value.
 
 =head2 B<< parse_request >>
 
