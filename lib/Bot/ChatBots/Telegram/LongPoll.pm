@@ -81,7 +81,7 @@ sub poller {
    my $update_timeout = $self->update_timeout;
    my %query = (
       offset => 0,
-      telegram_method => 'sendUpdate',
+      telegram_method => 'getUpdates',
       timeout => $update_timeout,
    );
 
