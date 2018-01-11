@@ -12,7 +12,7 @@ Bot::ChatBots::Telegram::WebHook - Telegram updates receiver, web hook
    use Log::Any::Adapter;
    use Mojolicious::Lite;
    Log::Any::Adapter->set('Stderr');
-   plugin 'Bot::ChatBots::Telegram' => sources => [
+   plugin 'Bot::ChatBots::Telegram' => instances => [
       [
          'WebHook',
          processor  => \&processor,
