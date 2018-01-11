@@ -73,7 +73,7 @@ All the heavylifting is done by L<Bot::ChatBots::MojoPlugin>.
 
 =head1 BUGS AND LIMITATIONS
 
-Report bugs either through RT or GitHub (patches welcome).
+Report bugs through GitHub (patches welcome).
 
 =head1 SEE ALSO
 
@@ -86,7 +86,7 @@ Flavio Poletti <polettix@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2016 by Flavio Poletti <polettix@cpan.org>
+Copyright (C) 2016, 2018 by Flavio Poletti <polettix@cpan.org>
 
 This module is free software. You can redistribute it and/or modify it
 under the terms of the Artistic License 2.0.
