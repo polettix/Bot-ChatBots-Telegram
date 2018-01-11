@@ -15,8 +15,8 @@ use namespace::clean;
 with 'Bot::ChatBots::Telegram::Role::Source';    # has normalize_record
 with 'Bot::ChatBots::Role::WebHook';
 
-has auto_register => (is => 'ro', default => 0, ini_arg => 'register');
-has auto_unregister => (is => 'ro', default => 0, ini_arg => 'unregister');
+has auto_register => (is => 'ro', default => 0, init_arg => 'register');
+has auto_unregister => (is => 'ro', default => 0, init_arg => 'unregister');
 
 sub BUILD {
    my $self = shift;
