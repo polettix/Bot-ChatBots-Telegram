@@ -1,5 +1,9 @@
 {{$NEXT}}
+
+0.009  2018-01-11 21:22:52 CET
    - Fix minor issue with Kwalitee
+   - Fix bugs in WebHook.pm and add logging
+   - Add examples for WebHook and LongPoll
 
 0.008  2018-01-11 08:14:43 CET
    - put "badges" together in POD to avoid indentation effect in
