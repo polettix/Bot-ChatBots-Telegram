@@ -78,7 +78,10 @@ sub register {
       $wh_url = $c->url_for($path);
    } ## end else [ if (my $url = $args->{...})]
 
-   my $form = {url => $wh_url->to_abs->to_string};
+   my $wh_url_string = $wh_url->to_abs->to_string;
+   $log->info("registering bot URI ", $wh_url_string);
+   my $form = {url => $wh_url_string};
+
    if ($self->{certificate}) {
       my $certificate = $args->{certificate};
       $certificate = {content => $certificate} unless ref $certificate;
