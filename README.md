@@ -10,23 +10,18 @@ This document describes Bot::ChatBots::Telegram version {{\[ version \]}}.
     <a href="https://travis-ci.org/polettix/Bot-ChatBots-Telegram">
     <img alt="Build Status" src="https://travis-ci.org/polettix/Bot-ChatBots-Telegram.svg?branch=master">
     </a>
-
     <a href="https://www.perl.org/">
     <img alt="Perl Version" src="https://img.shields.io/badge/perl-5.10+-brightgreen.svg">
     </a>
-
     <a href="https://badge.fury.io/pl/Bot-ChatBots-Telegram">
     <img alt="Current CPAN version" src="https://badge.fury.io/pl/Bot-ChatBots-Telegram.svg">
     </a>
-
     <a href="http://cpants.cpanauthors.org/dist/Bot-ChatBots-Telegram">
     <img alt="Kwalitee" src="http://cpants.cpanauthors.org/dist/Bot-ChatBots-Telegram.png">
     </a>
-
     <a href="http://www.cpantesters.org/distro/B/Bot-ChatBots-Telegram.html?distmat=1">
     <img alt="CPAN Testers" src="https://img.shields.io/badge/cpan-testers-blue.svg">
     </a>
-
     <a href="http://matrix.cpantesters.org/?dist=Bot-ChatBots-Telegram">
     <img alt="CPAN Testers Matrix" src="https://img.shields.io/badge/matrix-@testers-blue.svg">
     </a>

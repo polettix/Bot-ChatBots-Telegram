@@ -1,4 +1,6 @@
 {{$NEXT}}
+   - put "badges" together in POD to avoid indentation effect in
+     Markdown
 
 0.007  2018-01-11 00:40:26 CET
    - fixed issues in documentation
