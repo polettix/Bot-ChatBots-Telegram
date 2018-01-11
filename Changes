@@ -1,4 +1,5 @@
 {{$NEXT}}
+   - Fix minor issue with Kwalitee
 
 0.008  2018-01-11 08:14:43 CET
    - put "badges" together in POD to avoid indentation effect in
