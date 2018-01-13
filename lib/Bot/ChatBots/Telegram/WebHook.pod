@@ -107,10 +107,7 @@ Set/get the currently installed certificate.
 
 It can be either a string or a hash with the key C<certificate> pointing
 to that string, see L<WWW::Telegram::BotAPI> for additional details, or
-Telegram's documentation. Arguably, as of release 0.09 of
-L<WWW::Telegram::BotAPI> you will need to either upload your certificate
-beforehand and use an identifier here, or provide an URL for letting
-Telegram download it.
+Telegram's documentation.
 
 =head1 METHODS
 
