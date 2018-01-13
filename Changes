@@ -1,5 +1,10 @@
 {{$NEXT}}
+
+0.009001  2018-01-13 22:31:12 CET
    - fix indentation in README.md for examples
+   - fix "certificate" and document it in WebHook
+   - document constructor in WebHook
+   - TRIAL release
 
 0.009  2018-01-11 21:22:52 CET
    - fix minor issue with Kwalitee
