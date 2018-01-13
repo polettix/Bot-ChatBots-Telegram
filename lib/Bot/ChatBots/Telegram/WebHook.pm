@@ -16,7 +16,8 @@ with 'Bot::ChatBots::Telegram::Role::Source';    # has normalize_record
 with 'Bot::ChatBots::Role::WebHook';
 
 has auto_register => (is => 'ro', default => 0, init_arg => 'register');
-has auto_unregister => (is => 'ro', default => 0, init_arg => 'unregister');
+has auto_unregister => (is => 'rw', default => 0, init_arg => 'unregister');
+has certificate => (is => 'rw', default => undef);
 
 sub BUILD {
    my $self = shift;
@@ -79,15 +80,14 @@ sub register {
    } ## end else [ if (my $url = $args->{...})]
 
    my $wh_url_string = $wh_url->to_abs->to_string;
-   $log->info("registering bot URI $wh_url_string");
    my $form = {url => $wh_url_string};
 
-   if ($self->{certificate}) {
-      my $certificate = $args->{certificate};
+   if (my $certificate = $args->{certificate} // $self->certificate) {
       $certificate = {content => $certificate} unless ref $certificate;
       $form->{certificate} = $certificate;
    }
 
+   $log->info("registering bot URI $wh_url_string");
    $self->_register($args->{token} // $self->token, $form);
 
    return $self;
