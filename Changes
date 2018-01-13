@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+0.010  2018-01-13 23:28:06 CET
+   - remove incorrect assumption about WWW::Telegram::BotAPI
+   - release after 71 PASSes on CPAN Testers (thanks!)
+
 0.009001  2018-01-13 22:31:12 CET
    - fix indentation in README.md for examples
    - fix "certificate" and document it in WebHook
