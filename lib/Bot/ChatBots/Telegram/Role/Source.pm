@@ -29,7 +29,13 @@ sub normalize_record {
 
    $record->{sender} = $payload->{from};
 
-   my $chan = $record->{channel} = {%{$payload->{chat}}};
+   my $chan;
+   #check inline query
+   if ($type ne 'callback_query') {
+	$chan = $record->{channel} = {%{$payload->{chat}}};
+   } else {
+	$chan = $record->{channel} = {%{$payload->{message}->{chat}}};
+   }
    $chan->{fqid} = "$chan->{type}/$chan->{id}";
 
    return $record;
