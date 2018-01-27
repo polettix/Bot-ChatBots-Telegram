@@ -1,5 +1,11 @@
 {{$NEXT}}
 
+0.011  2018-01-27 15:22:09 CET
+   - fix chat expansion into channel for CallbackQuery Updates
+     (GH#3, thanks xeonvs)
+   - document the effect of normalize_record
+   - TRIAL release
+
 0.010  2018-01-13 23:28:06 CET
    - remove incorrect assumption about WWW::Telegram::BotAPI
    - release after 71 PASSes on CPAN Testers (thanks!)
