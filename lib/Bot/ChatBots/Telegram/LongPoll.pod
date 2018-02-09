@@ -76,14 +76,6 @@ a flag that prevents calls from being sent if another one is ongoing.
 Accessors for maximum number of redirects acceptable for the underlying
 L<Mojo::UserAgent>. Defaults to 5.
 
-=head2 B<< sender >>
-
-   my $sender = $obj->sender;
-   $obj->sender(Bot::ChatBots::Telegram::Sender->new(token => $token));
-
-Accessor for the L<Bot::ChatBots::Telegram::Sender> object used for
-managing communications from/to Telegram.
-
 =head2 B<< update_timeout >>
 
    my $to = $obj->update_timeout;

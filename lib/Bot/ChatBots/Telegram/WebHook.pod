@@ -48,11 +48,29 @@ Most probably you will also want to automatically register your webhook at
 Telegram. In this case, you MUST also provide a L</token>. You can also
 set automatic registration (and unregistration) when creating the object.
 
-When invoked, the L</processor> tube can return a record with the
-C<send_response> field set. In this case, this response is passed back as
-the answer to the call from the Telegram server (although Telegram
-documents correctly point out that you don't get any feedback about how
-successful this can be).
+When invoked, the L</processor> tube can set a quick response through one
+of the following keys:
+
+=over
+
+=item C<response>
+
+send the response as the HTTP Response to the HTTP Request that determined
+the Update. This is only available for WebHooks (LongPoll does not receive
+HTTP requests because it... polls)
+
+=item C<send_response>
+
+send the response using L</sender>. In this it behaves exactly as the
+LongPoll correspondent.
+
+=back
+
+
+return a record with the C<send_response> field set. In this case, this
+response is passed back as the answer to the call from the Telegram server
+(although Telegram documents correctly point out that you don't get any
+feedback about how successful this can be).
 
 B<NOTE>: while C<processor> is meant to be I<portable> between WebHook and
 LongPoll, and C<send_response> has the same semantics of "send this back",
@@ -69,15 +87,56 @@ This class consumes the following roles, inheriting their accessors:
 
 =item *
 
-L<Bot::ChatBots::Telegram::Role::Source>
+L<Bot::ChatBots::Telegram::Role::Source>:
+
+=over
+
+=item *
+
+L<Bot::ChatBots::Telegram::Role::Source/sender>:
+
+=item *
+
+L<Bot::ChatBots::Telegram::Role::Source/token>:
+
+=back
 
 =item *
 
 L<Bot::ChatBots::Role::WebHook>
 
+=over
+
+=item *
+
+L<Bot::ChatBots::Role::WebHook/app>
+
+=item *
+
+L<Bot::ChatBots::Role::WebHook/code>
+
+=item *
+
+L<Bot::ChatBots::Role::WebHook/method>
+
+=item *
+
+L<Bot::ChatBots::Role::WebHook/path>
+
+=item *
+
+L<Bot::ChatBots::Role::WebHook/url>
+
 =back
 
-Additionally, it provides the following ones:
+=back
+
+and also adds its own, as described in the sections below. It is worth
+noticing the presence of L<Bot::ChatBots::Telegram::Role::Source/sender>,
+which gives you back a L<Bot::ChatBots::Telegram::Sender> object suitable
+for sending messages to the Telegram API; the same object is used
+internally to send responses to Update requests when C<send_response> is
+specified.
 
 =head2 B<< auto_register >>
 
@@ -111,7 +170,7 @@ the constructor L</new>.
    $obj->certificate($certificate);
    my $current = $obj->certificate;
 
-Set/get the currently installed certificate.
+set/get the currently installed certificate.
 
 It can be either a string or a hash with the key C<certificate> pointing
 to that string, see L<WWW::Telegram::BotAPI> for additional details, or

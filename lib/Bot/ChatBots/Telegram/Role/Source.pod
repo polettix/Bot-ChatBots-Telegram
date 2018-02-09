@@ -22,6 +22,14 @@ and L<Bot::ChatBots::Telegram::LongPoll>.
 
 This role defines the accessors in the following subsections.
 
+=head2 B<< sender >>
+
+   my $sender = $obj->sender;
+   $obj->sender(Bot::ChatBots::Telegram::Sender->new(token => $token));
+
+Accessor for the L<Bot::ChatBots::Telegram::Sender> object useful for
+managing communications to Telegram.
+
 =head2 B<< token >>
 
    my $token = $obj->token;
