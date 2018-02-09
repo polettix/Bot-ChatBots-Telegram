@@ -24,11 +24,12 @@ Bot::ChatBots::Telegram::WebHook - Telegram updates receiver, web hook
       # more can follow here...
    ];
    app->start;
-   sub processor {
+   sub processor { # tube-compliant
       my $record = shift;
-      # do whatever you want with $record, e.g. set a quick response
-      $record->{response} = 'your thoughs are important for us!';
-      return $record;
+      # ... $record is normalized, by default
+      # quick response:
+      $record->{send_response} = 'Hello, world!';
+      return $record; # follow on..
    }
 
 =head1 DESCRIPTION
@@ -48,10 +49,10 @@ Telegram. In this case, you MUST also provide a L</token>. You can also
 set automatic registration (and unregistration) when creating the object.
 
 When invoked, the L</processor> tube can return a record with the
-C<response> field set. In this case, this response is passed back as the
-answer to the call from the Telegram server (although Telegram documents
-correctly point out that you don't get any feedback about how successful
-this can be).
+C<send_response> field set. In this case, this response is passed back as
+the answer to the call from the Telegram server (although Telegram
+documents correctly point out that you don't get any feedback about how
+successful this can be).
 
 =head1 ACCESSORS
 

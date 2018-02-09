@@ -40,10 +40,10 @@ You can also pass C<start> in the constructor, this will start the
 L<Mojo::IOLoop> directly (so you can use it in case you don't have other
 stuff to do).
 
-When invoked, the L</processor> tube can return a record with the C<response>
-field set. In this case, this update receiver can act also on the other way
-around, and send the C<response> towards Telegram using a
-L<Bot::ChatBots::Telegram::Sender>.
+When invoked, the L</processor> tube can return a record with the
+C<send_response> field set. In this case, this update receiver can act
+also on the other way around, and send the response towards Telegram
+using a L<Bot::ChatBots::Telegram::Sender>.
 
 =head1 ACCESSORS
 
