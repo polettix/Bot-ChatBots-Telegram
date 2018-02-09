@@ -31,16 +31,6 @@ has max_redirects => (
    default => sub { return 5 },
 );
 
-has sender => (
-   is      => 'ro',
-   lazy    => 1,
-   default => sub {    # prefer has-a in this case
-      my $self = shift;
-      require Bot::ChatBots::Telegram::Sender;
-      return Bot::ChatBots::Telegram::Sender->new(token => $self->token);
-   },
-);
-
 has _start => (
    is       => 'ro',
    default  => sub { return 1 },

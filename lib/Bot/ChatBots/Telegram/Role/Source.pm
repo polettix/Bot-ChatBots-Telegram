@@ -15,6 +15,16 @@ has token => (
    default => sub { ouch 500, 'token is not defined' }
 );
 
+has sender => (
+   is      => 'ro',
+   lazy    => 1,
+   default => sub {    # prefer has-a in this case
+      my $self = shift;
+      require Bot::ChatBots::Telegram::Sender;
+      return Bot::ChatBots::Telegram::Sender->new(token => $self->token);
+   },
+);
+
 {
    my %data_type_for = (
       message => 'Message',
