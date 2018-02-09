@@ -54,6 +54,13 @@ the answer to the call from the Telegram server (although Telegram
 documents correctly point out that you don't get any feedback about how
 successful this can be).
 
+B<NOTE>: while C<processor> is meant to be I<portable> between WebHook and
+LongPoll, and C<send_response> has the same semantics of "send this back",
+its implementation is quite different for the two cases. The WebHook
+simply uses the response path for the HTTPS query received from the
+Telegram server, while the LongPoll uses
+a L<Bot::ChatBots::Telegram::Sender> object (thus making a HTTP Request).
+
 =head1 ACCESSORS
 
 This class consumes the following roles, inheriting their accessors:
