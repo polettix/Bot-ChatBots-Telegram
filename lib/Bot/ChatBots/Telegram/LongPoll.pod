@@ -45,6 +45,32 @@ C<send_response> field set. In this case, this update receiver can act
 also on the other way around, and send the response towards Telegram
 using a L<Bot::ChatBots::Telegram::Sender>.
 
+ .                            ..Bot Application.....
+                              :                    :
+   __________________         :     ____________   :
+  /                  \        :    /            \  :
+  |                  |<----------1-|            |  :
+  |  Telegram Server |        :    |  LongPoll  |  :
+  |                  |-2---------->|            |  :
+  \__________________/        :    \____________/  :
+              |  ^            :        |           :
+              5  |            :        3 "send_response"
+              |  |            :        |           :
+              |  |            :     ___v______     :
+              |  |            :    /          \    :
+              |  +---------------4-|          |    :
+              |               :    |  Sender  |    :
+              +------------------->|          |    :
+                              :    \__________/    :
+                              :                    :
+                              :....................:
+
+   1, 2: Poll for new Update(s)
+   3   : internal call
+   4, 5: Telegram API Request/Response
+
+
+
 =head1 ACCESSORS
 
 This class consumes roles L<Bot::ChatBots::Telegram::Role::Source> and
