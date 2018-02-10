@@ -48,8 +48,8 @@ Most probably you will also want to automatically register your webhook at
 Telegram. In this case, you MUST also provide a L</token>. You can also
 set automatic registration (and unregistration) when creating the object.
 
-When invoked, the L</processor> tube can set a quick response through one
-of the following keys:
+When invoked, the L</processor> tube can set a response through either of
+the following keys:
 
 =over
 
@@ -57,27 +57,48 @@ of the following keys:
 
 send the response as the HTTP Response to the HTTP Request that determined
 the Update. This is only available for WebHooks (LongPoll does not receive
-HTTP requests because it... polls)
+HTTP requests because it... polls), and has the further characteristic of
+not receiving a response itself (because it's already a response). Note
+that this parameter is ignored if you generate the HTTP response yourself
+(via the standard Mojolicious way of doing this);
 
 =item C<send_response>
 
 send the response using L</sender>. In this it behaves exactly as the
-LongPoll correspondent.
+L<Bot::ChatBots::Telegram::LongPoll> correspondent.
 
 =back
 
+You can also set both of them: they are independent mechanisms and as long
+as you understand how they work there is no reason why you shouldn't. The
+following diagram will hopefully help you with this.
 
-return a record with the C<send_response> field set. In this case, this
-response is passed back as the answer to the call from the Telegram server
-(although Telegram documents correctly point out that you don't get any
-feedback about how successful this can be).
 
-B<NOTE>: while C<processor> is meant to be I<portable> between WebHook and
-LongPoll, and C<send_response> has the same semantics of "send this back",
-its implementation is quite different for the two cases. The WebHook
-simply uses the response path for the HTTPS query received from the
-Telegram server, while the LongPoll uses
-a L<Bot::ChatBots::Telegram::Sender> object (thus making a HTTP Request).
+ .                            ..Bot Application.....
+                              :                    :
+   __________________         :     ____________   :
+  /                  \        :    /            \  :
+  |                  |-1---------->|            |  :
+  |  Telegram Server |        :    |  WebHook   |  :
+  |                  |<----------2-|            |  :
+  \__________________/   "response"\____________/  :
+              |  ^            :        |           :
+              5  |            :        | "send_response"
+              |  |            :        |           :
+              |  |            :     ___v______     :
+              |  |            :    /          \    :
+              |  +---------------4-|          |    :
+              |               :    |  Sender  |    :
+              +------------------->|          |    :
+                              :    \__________/    :
+                              :                    :
+                              :....................:
+
+   1, 2: WebHook Request/Response
+   3   : internal call
+   4, 5: Telegram API Request/Response
+
+
 
 =head1 ACCESSORS
 
