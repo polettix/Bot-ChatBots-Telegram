@@ -309,7 +309,9 @@ C<$outcome> is a hash reference with a C<response> key inside, AND
 =item *
 
 C<< $record->{source}{flags}{rendered} >> is false (i.e. the response
-hasn't been rendered yet).
+hasn't been rendered yet). See
+L<Bot::ChatBots::Role::WebHook/process_updates> for more information about
+these flags.
 
 =back
 
