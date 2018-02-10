@@ -25,10 +25,29 @@ Bot::ChatBots::Telegram::WebHook - Telegram updates receiver, web hook
    ];
    app->start;
    sub processor { # tube-compliant
-      my $record = shift;
-      # ... $record is normalized, by default
-      # quick response:
-      $record->{send_response} = 'Hello, world!';
+      my $record = shift; # ... $record is normalized, by default
+
+      # ... your business logic goes here...
+      my $message = 'Howdy!';
+
+      # In a WebHook you're actually processing a HTTP Request from
+      # Telegram, so you can set a response via Mojolicious
+      if (automatic_via_https_response()) { # WebHook only
+         $record->{response} = $message;
+      }
+      elsif (do_it_yourself_via_https_response()) { # WebHook only
+         $record->{source}{refs}{controller}->render(text => $message);
+         $record->{source}{flags}{rendered} = 1; # if Bot::ChatBot <= 0.006
+      }
+      elsif (automatic_via_sender()) { # same as LongPoll
+         $record->{send_response} = $message;
+      }
+      elsif (do_it_yourself_via_sender()) { # same as LongPoll
+         my $sender = $record->{source}{refs}{sender};
+         $sender->send_response($message, record => $record);
+      }
+      # else nothing is sent back, just a HTTP 204 by default
+
       return $record; # follow on..
    }
 

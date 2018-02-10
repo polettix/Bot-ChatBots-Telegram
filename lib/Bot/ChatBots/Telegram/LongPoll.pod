@@ -16,9 +16,19 @@ Bot::ChatBots::Telegram::LongPoll - Telegram updates receiver, long-poll
    );
    sub processor { # tube-compliant
       my $record = shift;
-      # ... $record is normalized, by default
-      # quick response:
-      $record->{send_response} = 'Hello, world!';
+
+      # ... your business logic goes here...
+      my $message = 'Howdy!';
+
+      if (automatic_via_sender()) { # same as WebHook
+         $record->{send_response} = $message;
+      }
+      elsif (do_it_yourself_via_sender()) { # same as WebHook
+         my $sender = $record->{source}{refs}{sender};
+         $sender->send_response($message, record => $record);
+      }
+      # else nothing is sent back, just a HTTP 204 by default
+
       return $record; # follow on..
    }
 
