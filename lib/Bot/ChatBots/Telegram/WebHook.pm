@@ -54,6 +54,9 @@ sub _set_http_response {
 
 around process => sub {
    my ($orig, $self, $record) = @_;
+
+   $record->{source}{refs}{sender} = $self->sender;
+
    my $outcome = $orig->($self, $record);
 
    if (ref($outcome) eq 'HASH') {
