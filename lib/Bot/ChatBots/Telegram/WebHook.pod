@@ -102,7 +102,7 @@ following diagram will hopefully help you with this.
   |                  |<----------2-|            |  :
   \__________________/   "response"\____________/  :
               |  ^            :        |           :
-              5  |            :        | "send_response"
+              5  |            :        3 "send_response"
               |  |            :        |           :
               |  |            :     ___v______     :
               |  |            :    /          \    :
