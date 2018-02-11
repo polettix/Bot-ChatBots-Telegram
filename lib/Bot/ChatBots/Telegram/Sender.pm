@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Ouch;
 use 5.010;
-{ our $VERSION = '0.011'; }
+{ our $VERSION = '0.011001'; }
 
 use WWW::Telegram::BotAPI ();
 
