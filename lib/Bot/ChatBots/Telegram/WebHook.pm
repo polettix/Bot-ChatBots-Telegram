@@ -122,7 +122,7 @@ sub _register {
    require WWW::Telegram::BotAPI;
    my $outcome = WWW::Telegram::BotAPI->new(token => $token)
      ->setWebhook($form // {url => ''});
-   $log->info($outcome->{description} // 'unknown result');
+   $log->info($outcome->{description} // 'unknown result') if $log;
    return;
 } ## end sub _register
 
