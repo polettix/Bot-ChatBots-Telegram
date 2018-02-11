@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+0.012  2018-02-11 15:31:30 CET
+   - release after 71 PASSes on CPAN Testers (thanks!)
+
 0.011001  2018-02-11 10:28:52 CET
    - require WWW::Telegram::BotAPI 0.10 or newer
    - move sender accessor in Source role
