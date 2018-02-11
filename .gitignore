@@ -4,3 +4,5 @@
 /epan/
 /Bot-ChatBots-Telegram-*.tar.gz
 /Bot-ChatBots-Telegram-*/
+/eg/server.crt
+/eg/server.key
