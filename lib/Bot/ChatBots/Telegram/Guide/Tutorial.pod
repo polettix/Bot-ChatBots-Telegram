@@ -80,6 +80,37 @@ I<LongPoll> means that the program will enter an indefinite loop,
 continuously asking Telegram for updates (i.e. new messages of interest
 for the bot).
 
+The generic interaction model for longpoll is the following:
+
+ .                            ..Bot Application.....
+                              :                    :
+   __________________         :     ____________   :
+  /                  \        :    /            \  :
+  |                  |<----------1-|            |  :
+  |  Telegram Server |        :    |  LongPoll  |  :
+  |                  |-2---------->|            |  :
+  \__________________/        :    \____________/  :
+              |  ^            :        |           :
+              5  |            :        3           :
+              |  |            :        |           :
+              |  |            :     ___v______     :
+              |  |            :    /          \    :
+              |  +---------------4-|          |    :
+              |               :    |  Sender  |    :
+              +------------------->|          |    :
+                              :    \__________/    :
+                              :                    :
+                              :....................:
+
+   1, 2: Poll for new Update(s)
+   3   : internal call
+   4, 5: Telegram API Request/Response
+
+Your application polls for updates; as a reaction to them, it can decide
+to send a message back to the server, using
+a L<Bot::ChatBots::Telegram::Sender> object that wraps all the machinery
+for the API code.
+
 =head2 The Program
 
 Save this in a file:
@@ -395,6 +426,38 @@ a I<callback URL> called I<web hook>.
 Using web hooks is only marginally more complicated, mostly consisting of
 a different configuration setup. But... there are a few twists that will
 have to be discussed before diving into the code.
+
+This is the generic model for a web hook is the following:
+
+ .                            ..Bot Application.....
+                              :                    :
+   __________________         :     ____________   :
+  /                  \        :    /            \  :
+  |                  |-1---------->|            |  :
+  |  Telegram Server |        :    |  WebHook   |  :
+  |                  |<----------2-|            |  :
+  \__________________/        :    \____________/  :
+              |  ^            :        |           :
+              5  |            :        3           :
+              |  |            :        |           :
+              |  |            :     ___v______     :
+              |  |            :    /          \    :
+              |  +---------------4-|          |    :
+              |               :    |  Sender  |    :
+              +------------------->|          |    :
+                              :    \__________/    :
+                              :                    :
+                              :....................:
+
+   1, 2: WebHook Request/Response
+   3   : internal call
+   4, 5: Telegram API Request/Response
+
+As you can see, it's mostly the same as the longpoll one, except that in
+this case the initial message C<1> is sent from Telegram. Additionally, as
+we already discovered, it's possible to use the sender outside of an
+update.
+
 
 =head2 WebHooks Are Fussy
 
