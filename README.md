@@ -58,7 +58,33 @@ This document describes Bot::ChatBots::Telegram version {{\[ version \]}}.
 # DESCRIPTION
 
 This module allows you to to define [Bot::ChatBots](https://metacpan.org/pod/Bot::ChatBots) for
-[Telegram Messenger](https://telegram.org/).
+[Telegram](https://telegram.org/), a messaging application. For an
+introduction and tutorial, see
+[Bot::ChatBots::Telegram::Guide::Tutorial](https://metacpan.org/pod/Bot::ChatBots::Telegram::Guide::Tutorial).
+
+Strictly speaking, this _module_ is a [Mojolicious](https://metacpan.org/pod/Mojolicious) plugin that allows
+you to load and use [Bot::ChatBots::Telegram::WebHook](https://metacpan.org/pod/Bot::ChatBots::Telegram::WebHook) (see ["SYNOPSIS"](#synopsis)
+for a quick example). On the other hand, the _distribution_ also contains
+other modules that allow you to interact with Telegram, e.g.
+[Bot::Chatbots::Telegram::LongPoll](https://metacpan.org/pod/Bot::Chatbots::Telegram::LongPoll).
+
+These modules rely upon [Log::Any](https://metacpan.org/pod/Log::Any) for emitting logging information; you
+are encouraged to read that module's documentation for further
+information. For what we are concerned, you have to remember that all logs
+will be lost unless you configure [Log::Any](https://metacpan.org/pod/Log::Any), e.g. to send messages on
+standard output you can do this:
+
+    use Log::Any::Adapter qw< Stderr >;
+
+If using the web hook, then you will probably want to send the logs
+together with [Mojolicious](https://metacpan.org/pod/Mojolicious)'s logs, like this:
+
+    use Mojolicious::Lite;
+    use Log::Any::Adapter;
+    Log::Any::Adapter->set(MojoLog => logger => app->log);
+
+The configuration above relies on the presence of
+[Log::Any::Adapter::MojoLog](https://metacpan.org/pod/Log::Any::Adapter::MojoLog).
 
 # METHODS
 
