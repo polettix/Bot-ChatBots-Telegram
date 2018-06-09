@@ -37,46 +37,6 @@ DISTRIBUTIONS
       Ouch 0.0410
       Try::Tiny 0.27
       perl 5.010
-  CPAN-Meta-2.150010
-    pathname: D/DA/DAGOLDEN/CPAN-Meta-2.150010.tar.gz
-    provides:
-      CPAN::Meta 2.150010
-      CPAN::Meta::Converter 2.150010
-      CPAN::Meta::Feature 2.150010
-      CPAN::Meta::History 2.150010
-      CPAN::Meta::Merge 2.150010
-      CPAN::Meta::Prereqs 2.150010
-      CPAN::Meta::Spec 2.150010
-      CPAN::Meta::Validator 2.150010
-      Parse::CPAN::Meta 2.150010
-    requirements:
-      CPAN::Meta::Requirements 2.121
-      CPAN::Meta::YAML 0.011
-      Carp 0
-      Encode 0
-      Exporter 0
-      ExtUtils::MakeMaker 6.17
-      File::Spec 0.80
-      JSON::PP 2.27300
-      Scalar::Util 0
-      perl 5.008001
-      strict 0
-      version 0.88
-      warnings 0
-  CPAN-Meta-YAML-0.018
-    pathname: D/DA/DAGOLDEN/CPAN-Meta-YAML-0.018.tar.gz
-    provides:
-      CPAN::Meta::YAML 0.018
-    requirements:
-      B 0
-      Carp 0
-      Exporter 0
-      ExtUtils::MakeMaker 6.17
-      Fcntl 0
-      Scalar::Util 0
-      perl 5.008001
-      strict 0
-      warnings 0
   Class-Method-Modifiers-2.12
     pathname: E/ET/ETHER/Class-Method-Modifiers-2.12.tar.gz
     provides:
@@ -327,14 +287,6 @@ DISTRIBUTIONS
       Encode 2.10
       Exporter 5.57
       ExtUtils::MakeMaker 6.30
-  IO-Socket-IP-0.38
-    pathname: P/PE/PEVANS/IO-Socket-IP-0.38.tar.gz
-    provides:
-      IO::Socket::IP 0.38
-    requirements:
-      IO::Socket 0
-      Socket 1.97
-      Test::More 0.88
   IO-Socket-SSL-2.038
     pathname: S/SU/SULLR/IO-Socket-SSL-2.038.tar.gz
     provides:
@@ -365,15 +317,6 @@ DISTRIBUTIONS
       JSON::PP 2.27300
       Scalar::Util 0
       perl 5.006
-  JSON-PP-2.27400
-    pathname: M/MA/MAKAMAKA/JSON-PP-2.27400.tar.gz
-    provides:
-      JSON::PP 2.27400
-      JSON::PP::Boolean 2.27400
-      JSON::PP::IncrParser 2.27400
-    requirements:
-      ExtUtils::MakeMaker 0
-      Test::More 0
   LWP-MediaTypes-6.02
     pathname: G/GA/GAAS/LWP-MediaTypes-6.02.tar.gz
     provides:
@@ -423,15 +366,6 @@ DISTRIBUTIONS
       perl 5.008001
       strict 0
       warnings 0
-  Log-Any-Adapter-MojoLog-0.02
-    pathname: J/JB/JBERGER/Log-Any-Adapter-MojoLog-0.02.tar.gz
-    provides:
-      Log::Any::Adapter::MojoLog 0.02
-    requirements:
-      Log::Any 0.14
-      Log::Any::Adapter 0.07
-      Module::Build::Tiny 0.007
-      Mojolicious 2.15
   Meta-Builder-0.003
     pathname: E/EX/EXODIST/Meta-Builder-0.003.tar.gz
     provides:
@@ -443,31 +377,6 @@ DISTRIBUTIONS
       Fennec::Lite 0
       Test::Exception 0
       Test::More 0
-  Mo-0.40
-    pathname: T/TI/TINITA/Mo-0.40.tar.gz
-    provides:
-      Attr::Trait 0.40
-      Mo 0.40
-      Mo::Golf 0.40
-      Mo::Inline 0.40
-      Mo::Moose 0.40
-      Mo::Mouse 0.40
-      Mo::build 0.40
-      Mo::builder 0.40
-      Mo::chain 0.40
-      Mo::coerce 0.40
-      Mo::default 0.40
-      Mo::exporter 0.40
-      Mo::import 0.40
-      Mo::importer 0.40
-      Mo::is 0.40
-      Mo::nonlazy 0.40
-      Mo::option 0.40
-      Mo::required 0.40
-      Mo::xs 0.40
-    requirements:
-      ExtUtils::MakeMaker 0
-      perl 5.006000
   Mock-Quick-1.111
     pathname: E/EX/EXODIST/Mock-Quick-1.111.tar.gz
     provides:
@@ -697,6 +606,7 @@ DISTRIBUTIONS
       JSON::PP 2.27103
       Pod::Simple 3.09
       Time::Local 1.2
+      perl 5.010001
   Moo-2.002005
     pathname: H/HA/HAARG/Moo-2.002005.tar.gz
     provides:
@@ -874,127 +784,14 @@ DISTRIBUTIONS
       perl 5.006001
       strict 0
       warnings 0
-  Test-Harness-3.36
-    pathname: L/LE/LEONT/Test-Harness-3.36.tar.gz
-    provides:
-      App::Prove 3.36
-      App::Prove::State 3.36
-      App::Prove::State::Result 3.36
-      App::Prove::State::Result::Test 3.36
-      Harness::Hook undef
-      TAP::Base 3.36
-      TAP::Formatter::Base 3.36
-      TAP::Formatter::Color 3.36
-      TAP::Formatter::Console 3.36
-      TAP::Formatter::Console::ParallelSession 3.36
-      TAP::Formatter::Console::Session 3.36
-      TAP::Formatter::File 3.36
-      TAP::Formatter::File::Session 3.36
-      TAP::Formatter::Session 3.36
-      TAP::Harness 3.36
-      TAP::Harness::Env 3.36
-      TAP::Object 3.36
-      TAP::Parser 3.36
-      TAP::Parser::Aggregator 3.36
-      TAP::Parser::Grammar 3.36
-      TAP::Parser::Iterator 3.36
-      TAP::Parser::Iterator::Array 3.36
-      TAP::Parser::Iterator::Process 3.36
-      TAP::Parser::Iterator::Stream 3.36
-      TAP::Parser::IteratorFactory 3.36
-      TAP::Parser::Multiplexer 3.36
-      TAP::Parser::Result 3.36
-      TAP::Parser::Result::Bailout 3.36
-      TAP::Parser::Result::Comment 3.36
-      TAP::Parser::Result::Plan 3.36
-      TAP::Parser::Result::Pragma 3.36
-      TAP::Parser::Result::Test 3.36
-      TAP::Parser::Result::Unknown 3.36
-      TAP::Parser::Result::Version 3.36
-      TAP::Parser::Result::YAML 3.36
-      TAP::Parser::ResultFactory 3.36
-      TAP::Parser::Scheduler 3.36
-      TAP::Parser::Scheduler::Job 3.36
-      TAP::Parser::Scheduler::Spinner 3.36
-      TAP::Parser::Source 3.36
-      TAP::Parser::SourceHandler 3.36
-      TAP::Parser::SourceHandler::Executable 3.36
-      TAP::Parser::SourceHandler::File 3.36
-      TAP::Parser::SourceHandler::Handle 3.36
-      TAP::Parser::SourceHandler::Perl 3.36
-      TAP::Parser::SourceHandler::RawTAP 3.36
-      TAP::Parser::YAMLish::Reader 3.36
-      TAP::Parser::YAMLish::Writer 3.36
-      Test::Harness 3.36
-    requirements:
-      ExtUtils::MakeMaker 0
-  Test-Simple-1.302059
-    pathname: E/EX/EXODIST/Test-Simple-1.302059.tar.gz
-    provides:
-      Test2 1.302059
-      Test2::API 1.302059
-      Test2::API::Breakage 1.302059
-      Test2::API::Context 1.302059
-      Test2::API::Instance 1.302059
-      Test2::API::Stack 1.302059
-      Test2::Event 1.302059
-      Test2::Event::Bail 1.302059
-      Test2::Event::Diag 1.302059
-      Test2::Event::Exception 1.302059
-      Test2::Event::Generic 1.302059
-      Test2::Event::Info 1.302059
-      Test2::Event::Note 1.302059
-      Test2::Event::Ok 1.302059
-      Test2::Event::Plan 1.302059
-      Test2::Event::Skip 1.302059
-      Test2::Event::Subtest 1.302059
-      Test2::Event::Waiting 1.302059
-      Test2::Formatter 1.302059
-      Test2::Formatter::TAP 1.302059
-      Test2::Hub 1.302059
-      Test2::Hub::Interceptor 1.302059
-      Test2::Hub::Interceptor::Terminator 1.302059
-      Test2::Hub::Subtest 1.302059
-      Test2::IPC 1.302059
-      Test2::IPC::Driver 1.302059
-      Test2::IPC::Driver::Files 1.302059
-      Test2::Util 1.302059
-      Test2::Util::ExternalMeta 1.302059
-      Test2::Util::HashBase 1.302059
-      Test2::Util::Trace 1.302059
-      Test::Builder 1.302059
-      Test::Builder::Formatter 1.302059
-      Test::Builder::IO::Scalar 2.113
-      Test::Builder::Module 1.302059
-      Test::Builder::Tester 1.302059
-      Test::Builder::Tester::Color 1.302059
-      Test::Builder::Tester::Tie 1.302059
-      Test::Builder::TodoDiag 1.302059
-      Test::More 1.302059
-      Test::Simple 1.302059
-      Test::Tester 1.302059
-      Test::Tester::Capture 1.302059
-      Test::Tester::CaptureRunner 1.302059
-      Test::Tester::Delegate 1.302059
-      Test::use::ok 1.302059
-      ok 1.302059
-    requirements:
-      ExtUtils::MakeMaker 0
-      File::Spec 0
-      File::Temp 0
-      PerlIO 0
-      Scalar::Util 1.13
-      Storable 0
-      perl 5.008001
-      utf8 0
   Test-Trap-v0.3.2
     pathname: E/EB/EBHANSSEN/Test-Trap-v0.3.2.tar.gz
     provides:
-      Test::Trap 0.003002
-      Test::Trap::Builder 0.003002
-      Test::Trap::Builder::PerlIO 0.003002
-      Test::Trap::Builder::SystemSafe 0.003002
-      Test::Trap::Builder::TempFile 0.003002
+      Test::Trap v0.3.2
+      Test::Trap::Builder v0.3.2
+      Test::Trap::Builder::PerlIO v0.3.2
+      Test::Trap::Builder::SystemSafe v0.3.2
+      Test::Trap::Builder::TempFile v0.3.2
     requirements:
       Carp 0
       Data::Dump 0
@@ -1119,10 +916,10 @@ DISTRIBUTIONS
       Fcntl 0
       URI 1.10
       perl 5.008001
-  WWW-Telegram-BotAPI-0.07
-    pathname: R/RO/ROBERTOF/WWW-Telegram-BotAPI-0.07.tar.gz
+  WWW-Telegram-BotAPI-0.10
+    pathname: R/RO/ROBERTOF/WWW-Telegram-BotAPI-0.10.tar.gz
     provides:
-      WWW::Telegram::BotAPI 0.07
+      WWW::Telegram::BotAPI 0.10
     requirements:
       Carp 0
       Encode 0
