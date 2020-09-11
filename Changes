@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+0.014  2020-09-11 19:52:08 CEST
+   - release after 84 PASSes on CPAN Testers (thanks!)
+
 0.013  2020-09-10 16:24:49 CEST
    - add tracing capabilities to LongPoll
    - add pointers in main module's documentation
